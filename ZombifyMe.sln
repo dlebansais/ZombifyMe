@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.705
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZombifyMe", "ZombifyMe\ZombifyMe.csproj", "{8AA2D8ED-7177-46B0-BFAC-C59C92883C44}"
+	ProjectSection(ProjectDependencies) = postProject
+		{ADB92F48-D2F5-440E-AC3E-113C777E825E} = {ADB92F48-D2F5-440E-AC3E-113C777E825E}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{BF8580F6-6858-4EA4-924E-F00AB7C8E212}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZombifyMeMonitor", "ZombifyMeMonitor\ZombifyMeMonitor.csproj", "{ADB92F48-D2F5-440E-AC3E-113C777E825E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8AA2D8ED-7177-46B0-BFAC-C59C92883C44}.Debug|x64.ActiveCfg = Debug|x64
+		{8AA2D8ED-7177-46B0-BFAC-C59C92883C44}.Debug|x64.Build.0 = Debug|x64
+		{8AA2D8ED-7177-46B0-BFAC-C59C92883C44}.Release|x64.ActiveCfg = Release|x64
+		{8AA2D8ED-7177-46B0-BFAC-C59C92883C44}.Release|x64.Build.0 = Release|x64
+		{BF8580F6-6858-4EA4-924E-F00AB7C8E212}.Debug|x64.ActiveCfg = Debug|x64
+		{BF8580F6-6858-4EA4-924E-F00AB7C8E212}.Debug|x64.Build.0 = Debug|x64
+		{BF8580F6-6858-4EA4-924E-F00AB7C8E212}.Release|x64.ActiveCfg = Release|x64
+		{BF8580F6-6858-4EA4-924E-F00AB7C8E212}.Release|x64.Build.0 = Release|x64
+		{ADB92F48-D2F5-440E-AC3E-113C777E825E}.Debug|x64.ActiveCfg = Debug|x64
+		{ADB92F48-D2F5-440E-AC3E-113C777E825E}.Debug|x64.Build.0 = Debug|x64
+		{ADB92F48-D2F5-440E-AC3E-113C777E825E}.Release|x64.ActiveCfg = Release|x64
+		{ADB92F48-D2F5-440E-AC3E-113C777E825E}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7EFF49D6-030F-4204-BCA4-6EFF20E219B0}
+	EndGlobalSection
+EndGlobal
