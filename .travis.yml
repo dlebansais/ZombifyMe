@@ -1,0 +1,18 @@
+language: csharp
+solution: ZombifyMe.sln
+
+install:
+- nuget restore ZombifyMe.sln
+
+script:
+- msbuild /p:Configuration=Travis ZombifyMe.sln
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local_dir: ./ZombifyMe/bin/x64/Travis
+  target_branch: gh-pages
+  email: "github-pages-deploy@travis-ci.org"
+  on:
+    branch: master
