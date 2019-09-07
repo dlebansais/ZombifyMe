@@ -7,10 +7,10 @@ To use it, just include ZombifyMe.dll as a reference in your project and add the
 
 ## Process startup
 
-At startup, after initialization completed successfully, enable Zombify me.
+At startup, after initialization completed successfully, enable ZombifyMe.
 
 ```csharp
-Zombification Zombification = new Zombification("My unique process name");
+Zombification Zombification = new Zombification("My unique name");
 Zombification.ZombifyMe();
 ```
 
@@ -27,7 +27,7 @@ Zombification.Cancel();
 ## Restarted process
 
 A program can know if it has been started normally, or restarted, by reading the static property `Zombification.IsRestart`.
-Note that this value is set only if the NoWindow flag is set (see below).
+Note that this value is set only if the `NoWindow` flag was set (see below).
 
 ## Parameters
 
