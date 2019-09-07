@@ -15,7 +15,7 @@
         #region Implementation
         public static int Main(string[] args)
         {
-            Debug.Assert(args != null && args.Length >= 4);
+            Debug.Assert(args != null && args.Length >= 5);
 
             if (!int.TryParse(args[0], out int ProcessId))
                 return -1;
@@ -27,7 +27,10 @@
             if (!OpenCancelEvent(Shared.GetCancelEventName(ClientName), out EventWaitHandle CancelEvent))
                 return -2;
 
-            MonitorProcess(ProcessId, ProcessExePath, ProcessArguments, CancelEvent, out bool IsRestarted);
+            if (!long.TryParse(args[4], out long DelayTicks))
+                return -2;
+
+            MonitorProcess(ProcessId, ProcessExePath, ProcessArguments, CancelEvent, TimeSpan.FromTicks(DelayTicks), out bool IsRestarted);
 
             return IsRestarted ? 1 : 0;
         }
@@ -47,7 +50,7 @@
             }
         }
 
-        private static void MonitorProcess(int processId, string processExePath, string processArguments, EventWaitHandle cancelEvent, out bool isRestarted)
+        private static void MonitorProcess(int processId, string processExePath, string processArguments, EventWaitHandle cancelEvent, TimeSpan delay, out bool isRestarted)
         {
             while (true)
             {
@@ -66,14 +69,17 @@
                 }
                 catch
                 {
-                    isRestarted = RestartProcess(processExePath, processArguments);
+                    isRestarted = RestartProcess(processExePath, processArguments, delay);
                     break;
                 }
             }
         }
 
-        private static bool RestartProcess(string processExePath, string processArguments)
+        private static bool RestartProcess(string processExePath, string processArguments, TimeSpan delay)
         {
+            if (delay.TotalSeconds > 0)
+                Thread.Sleep(delay);
+
             ProcessStartInfo StartInfo = new ProcessStartInfo();
             StartInfo.FileName = processExePath;
             StartInfo.Arguments = processArguments;

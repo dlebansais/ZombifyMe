@@ -34,6 +34,7 @@
         }
 
         public string ClientName { get; }
+        public TimeSpan Delay { get; set; } = TimeSpan.Zero;
         public bool SameCommandLine { get; set; } = true;
         public bool RestartedBallonMessage { get; set; } = false;
         #endregion
@@ -48,12 +49,13 @@
                 return false;
 
             int ProcessId = Process.GetCurrentProcess().Id;
-            
+            long DelayTicks = Delay.Ticks;
+
             CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, Shared.GetCancelEventName(ClientName));
 
             Process MonitorProcess = new Process();
             MonitorProcess.StartInfo.FileName = MonitorProcessFileName;
-            MonitorProcess.StartInfo.Arguments = $"{ProcessId} \"{ClientExePath}\" \"\" \"{ClientName}\"";
+            MonitorProcess.StartInfo.Arguments = $"{ProcessId} \"{ClientExePath}\" \"\" \"{ClientName}\" {DelayTicks}";
             MonitorProcess.StartInfo.UseShellExecute = false;
             MonitorProcess.StartInfo.CreateNoWindow = true;
 
