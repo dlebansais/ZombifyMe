@@ -6,38 +6,56 @@
     using System.Threading;
     using TaskbarTools;
 
+    /// <summary>
+    /// The main class for this program.
+    /// </summary>
     public class Program
     {
         #region Constants
+        /// <summary>
+        /// The period for checking if a process has disappeared.
+        /// </summary>
         public static readonly TimeSpan CheckInterval = TimeSpan.FromSeconds(10);
         #endregion
 
         #region Implementation
+        /// <summary>
+        /// Entry points of the program.
+        /// </summary>
+        /// <param name="args">Arguments from the ZombifyMe library.</param>
+        /// <returns>0 if the monitored process exited normally, 1 if it was restarted, a negative value in case of error.</returns>
         public static int Main(string[] args)
         {
-            Debug.Assert(args != null && args.Length >= 8);
-
-            if (!int.TryParse(args[0], out int ProcessId))
+            // Check arguments; They should be valid since only ZombifyMe is starting us.
+            if (args == null && args.Length < 8)
                 return -1;
+
+            // Read the ID of the process to monitor.
+            if (!int.TryParse(args[0], out int ProcessId))
+                return -2;
 
             string ProcessExePath = args[1];
             string ProcessArguments = args[2];
             string ClientName = args[3];
 
+            // Open the cancel event. This event uses two unique names, one for the ZombifyMe, the other from the client.
             if (!OpenCancelEvent(Shared.GetCancelEventName(ClientName), out EventWaitHandle CancelEvent))
-                return -2;
+                return -3;
 
+            // Read the delay, in ticks.
             if (!long.TryParse(args[4], out long DelayTicks))
-                return -2;
+                return -4;
 
+            // Read messages. They can be empty.
             string WatchingMessage = args[5];
             string RestartMessage = args[6];
 
+            // Read the flags, as a set of bits.
             if (!int.TryParse(args[7], out int FlagsValue))
-                return -2;
-
+                return -5;
             Flags Flags = (Flags)FlagsValue;
 
+            // Display the begin message if requested.
             if (WatchingMessage.Length > 0)
                 TaskbarBalloon.Show(WatchingMessage);
 
@@ -61,6 +79,17 @@
             }
         }
 
+        /// <summary>
+        /// Main loop of the monitoring program.
+        /// </summary>
+        /// <param name="processId">Id of the process to monitor.</param>
+        /// <param name="processExePath">Path to the process executable file.</param>
+        /// <param name="processArguments">Arguments to use when restarting the process, empty if no argument.</param>
+        /// <param name="cancelEvent">An event to check; If set, monitoring is canceled.</param>
+        /// <param name="delay">A delay between the time the process has disappeared and the time it's restarted.</param>
+        /// <param name="restartMessage">The message to display when a process was restarted.</param>
+        /// <param name="flags">Process restart flags.</param>
+        /// <param name="isRestarted">True upon return if the process crashed and was restarted.</param>
         private static void MonitorProcess(int processId, string processExePath, string processArguments, EventWaitHandle cancelEvent, TimeSpan delay, string restartMessage, Flags flags, out bool isRestarted)
         {
             while (true)
@@ -75,6 +104,7 @@
                 {
                     using (Process MonitoredProcess = Process.GetProcessById(processId))
                     {
+                        // Not necessary if CheckInterval is not zero, but let's be a good citizen.
                         Thread.Yield();
                     }
                 }
@@ -86,6 +116,15 @@
             }
         }
 
+        /// <summary>
+        /// Restarts a process that has disappeared.
+        /// </summary>
+        /// <param name="processExePath">Path to the process executable file.</param>
+        /// <param name="processArguments">Arguments to use when restarting the process, empty if no argument.</param>
+        /// <param name="delay">A delay between the time the process has disappeared and the time it's restarted.</param>
+        /// <param name="restartMessage">The message to display when a process was restarted.</param>
+        /// <param name="flags">Process restart flags.</param>
+        /// <returns>True if restarted; False if an error occurred.</returns>
         private static bool RestartProcess(string processExePath, string processArguments, TimeSpan delay, string restartMessage, Flags flags)
         {
             if (delay.TotalSeconds > 0)
@@ -100,6 +139,8 @@
             {
                 StartInfo.UseShellExecute = false;
                 StartInfo.CreateNoWindow = true;
+
+                // Setting this variable will tell the process it's been restarted. The value doesn't matter.
                 StartInfo.EnvironmentVariables[Shared.RestartEnvironmentVariable] = "*";
             }
 

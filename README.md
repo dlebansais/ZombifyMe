@@ -32,7 +32,7 @@ Note that this value is set only if the `NoWindow` flag was set (see below).
 ## Parameters
 
 + The name provided in the constructor just needs to be unique vs other users of ZombifyMe. A simple string such as your product name or a guid is enough. Avoid special characters that have a meaning or are forbidden in file and directory names.
-+ Change the `Delay` property to add a delay before the process is restarted.
++ Change the `Delay` property to add a delay before the process is restarted (accuracy is about 10 seconds).
 
 ```csharp
 Zombification.Delay = TimeSpan.FromMinutes(1);
