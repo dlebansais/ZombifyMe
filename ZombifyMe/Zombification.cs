@@ -35,27 +35,43 @@
 
         public string ClientName { get; }
         public TimeSpan Delay { get; set; } = TimeSpan.Zero;
-        public bool SameCommandLine { get; set; } = true;
-        public bool RestartedBallonMessage { get; set; } = false;
+        public string WatchingMessage { get; set; } = null;
+        public string RestartMessage { get; set; } = "ZombifyMe Alert:\nA protected process has been restarted";
+        public Flags Flags { get; set; } = Flags.ForwardArguments;
         #endregion
 
         #region Client Interface
         public bool ZombifyMe()
         {
-            Assembly EntryAssembly = Assembly.GetEntryAssembly();
-            string ClientExePath = EntryAssembly.Location;
-
             if (!LoadMonitor(out string MonitorProcessFileName))
                 return false;
 
             int ProcessId = Process.GetCurrentProcess().Id;
+
+            Assembly EntryAssembly = Assembly.GetEntryAssembly();
+            string ClientExePath = EntryAssembly.Location;
+
+            string ArgsText = "";
+            if (Flags.HasFlag(Flags.ForwardArguments))
+            {
+                string[] Args = Environment.GetCommandLineArgs();
+                for (int i = 1; i < Args.Length; i++)
+                {
+                    string Arg = Args[i];
+                    if (ArgsText.Length > 0)
+                        ArgsText += " ";
+
+                    ArgsText += Arg;
+                }
+            }
+
             long DelayTicks = Delay.Ticks;
 
             CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, Shared.GetCancelEventName(ClientName));
 
             Process MonitorProcess = new Process();
             MonitorProcess.StartInfo.FileName = MonitorProcessFileName;
-            MonitorProcess.StartInfo.Arguments = $"{ProcessId} \"{ClientExePath}\" \"\" \"{ClientName}\" {DelayTicks}";
+            MonitorProcess.StartInfo.Arguments = $"{ProcessId} \"{ClientExePath}\" \"{ArgsText}\" \"{ClientName}\" {DelayTicks} \"{WatchingMessage}\" \"{RestartMessage}\" {(int)Flags}";
             MonitorProcess.StartInfo.UseShellExecute = false;
             MonitorProcess.StartInfo.CreateNoWindow = true;
 

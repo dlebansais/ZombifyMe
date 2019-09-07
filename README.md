@@ -24,6 +24,11 @@ When you know the process is going to exit normally, whether it's reporting succ
 Zombification.Cancel();
 ```
 
+## Restarted process
+
+A program can know if it has been started normally, or restarted, by reading the static property `Zombification.IsRestart`.
+Note that this value is set only if the NoWindow flag is set (see below).
+
 ## Parameters
 
 + The name provided in the constructor just needs to be unique vs other users of ZombifyMe. A simple string such as your product name or a guid is enough. Avoid special characters that have a meaning or are forbidden in file and directory names.
@@ -32,6 +37,13 @@ Zombification.Cancel();
 ```csharp
 Zombification.Delay = TimeSpan.FromMinutes(1);
 ```
+
++ You can customize some messages:
+  * The message when watching over the process begins is set by the `WatchingMessage` property. The default message is null (no message).
+  * The message when a process has been restarted is set in the `RestartMessage` property.
++ How the process is restarted can be controlled with some flags:
+  * `NoWindow`: the new process is created with no window.
+  * `ForwardArguments` (ON by default): arguments of the original process are reused when starting the new process.
 
 # Certification
 

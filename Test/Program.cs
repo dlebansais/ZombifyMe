@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
+using System.Windows.Forms;
 using ZombifyMe;
 
 namespace Test
@@ -9,17 +11,28 @@ namespace Test
 
         static void Main(string[] args)
         {
+            string Message = $"IsRestart: {IsRestart}, Arguments: {args.Length}";
+            foreach (string Arg in args)
+                Message += ", " + Arg;
+
+            MessageBox.Show(Message);
+
             Zombification Zombification = null;
 
             Zombification = new Zombification("test");
-            Zombification.SameCommandLine = true;
-            Zombification.RestartedBallonMessage = true;
+            Zombification.Delay = TimeSpan.FromSeconds(5);
+            Zombification.Flags = Flags.ForwardArguments | Flags.NoWindow;
             Zombification.ZombifyMe();
+
+            DialogResult ShowResult = MessageBox.Show("ZombifyMe() done", "", MessageBoxButtons.OKCancel);
 
             Thread.Sleep(10000);
 
-            if (Zombification != null && IsRestart)
+            if ((Zombification != null && IsRestart) || ShowResult == DialogResult.Cancel)
+            {
                 Zombification.Cancel();
+                MessageBox.Show("Cancel() done");
+            }
         }
     }
 }

@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Errors.cs" />
     <Compile Include="NativeMethods.cs" />
+    <Compile Include="../Common/Flags.cs" />
     <Compile Include="../Common/Shared.cs" />
     <Compile Include="Zombification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
