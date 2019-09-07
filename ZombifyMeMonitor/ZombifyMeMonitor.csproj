@@ -75,4 +75,7 @@ if exist "$(SolutionDir)signfile.bat" call "$(SolutionDir)signfile.bat" "$(Solut
 if exist "$(TargetPath)" copy /Y "$(TargetPath)" "$(SolutionDir)ZombifyMe\Resources\$(TargetName).$(Configuration).exe"
 </PostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Travis|x64'">
+    <PostBuildEvent>cp "$(TargetPath)" "$(SolutionDir)ZombifyMe/Resources/$(TargetName).$(Configuration).exe"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
