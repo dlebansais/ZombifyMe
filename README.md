@@ -46,6 +46,15 @@ Zombification.Delay = TimeSpan.FromMinutes(1);
   * `ForwardArguments` (ON by default): arguments of the original process are reused when starting the new process.
 + You can enable symetric monitoring. When enabled, the original process and the process that monitors it watch over each other: if one is killed or crashes the other restarts it. When this is enabled it becomes quite difficult to manually kill any of these processes, so setting a large delay such as one minute is recommended.
 
+The following example sets all parameters to their default value.
+```csharp
+Zombification.Delay = TimeSpan.Zero;
+Zombification.WatchingMessage = null;
+Zombification.RestartMessage = "ZombifyMe Alert:\nA protected process has been restarted";
+Zombification.Flags = Flags.ForwardArguments;
+Zombification.IsSymetric = false;
+```
+
 # Certification
 
 This library is digitally signed with a [CAcert](https://www.cacert.org/) certificate.
