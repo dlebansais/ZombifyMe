@@ -44,6 +44,7 @@ Zombification.Delay = TimeSpan.FromMinutes(1);
 + How the process is restarted can be controlled with some flags:
   * `NoWindow`: the new process is created with no window.
   * `ForwardArguments` (ON by default): arguments of the original process are reused when starting the new process.
++ You can enable symetric monitoring. When enabled, the original process and the process that monitors it watch over each other: if one is killed or crashes the other restarts it. When this is enabled it becomes quite difficult to manually kill any of these processes, so setting a large delay such as one minute is recommended.
 
 # Certification
 
