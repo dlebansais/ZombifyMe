@@ -22,11 +22,12 @@ namespace Test
             Zombification = new Zombification("test");
             Zombification.Delay = TimeSpan.FromSeconds(5);
             Zombification.Flags = Flags.ForwardArguments | Flags.NoWindow;
+            Zombification.IsSymetric = true;
             Zombification.ZombifyMe();
 
             DialogResult ShowResult = MessageBox.Show("ZombifyMe() done", "", MessageBoxButtons.OKCancel);
 
-            Thread.Sleep(10000);
+            Thread.Sleep(20000);
 
             if ((Zombification != null && IsRestart) || ShowResult == DialogResult.Cancel)
             {

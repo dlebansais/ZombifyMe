@@ -69,6 +69,11 @@
         public Flags Flags { get; set; } = Flags.ForwardArguments;
 
         /// <summary>
+        /// True if the main process should also watch on the monitoring process to restart it.
+        /// </summary>
+        public bool IsSymetric { get; set; } = false;
+
+        /// <summary>
         /// The last error encountered by <see cref="ZombifyMe"/>.
         /// </summary>
         public Errors LastError { get; private set; } = Errors.Success;
@@ -81,11 +86,25 @@
         /// <returns>True if successful; False otherwise and <see cref="LastError"/> contains the error.</returns>
         public bool ZombifyMe()
         {
-            LastError = Errors.Success;
+            Monitoring NewMonitoring = new Monitoring() { ClientName = ClientName, Delay = Delay, WatchingMessage = WatchingMessage, RestartMessage = RestartMessage, Flags = Flags, IsSymetric = IsSymetric };
+            Debug.Assert(NewMonitoring.CancelEvent == null);
+
+            bool Result = ZombifyMeInternal(NewMonitoring, out Errors Error);
+            CancelEvent = NewMonitoring.CancelEvent;
+            LastError = Error;
+
+            return Result;
+        }
+
+        private static bool ZombifyMeInternal(Monitoring monitoring, out Errors error)
+        {
+            monitoring.MonitorProcess = null;
+            monitoring.CancelEvent = null;
+            error = Errors.Success;
 
             if (!LoadMonitor(out string MonitorProcessFileName))
             {
-                LastError = Errors.UnableToLoadSource;
+                error = Errors.UnableToLoadSource;
                 return false;
             }
 
@@ -95,7 +114,7 @@
             string ClientExePath = EntryAssembly.Location;
 
             string ArgsText = string.Empty;
-            if (Flags.HasFlag(Flags.ForwardArguments))
+            if (monitoring.Flags.HasFlag(Flags.ForwardArguments))
             {
                 // Accumulate arguments in a single string.
                 string[] Args = Environment.GetCommandLineArgs();
@@ -109,14 +128,17 @@
                 }
             }
 
-            long DelayTicks = Delay.Ticks;
+            long DelayTicks = monitoring.Delay.Ticks;
 
-            CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, Shared.GetCancelEventName(ClientName));
+            if (monitoring.CancelEvent == null)
+                monitoring.CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, Shared.GetCancelEventName(monitoring.ClientName));
+            else
+                monitoring.CancelEvent.Reset();
 
             // Start the monitoring process.
             Process MonitorProcess = new Process();
             MonitorProcess.StartInfo.FileName = MonitorProcessFileName;
-            MonitorProcess.StartInfo.Arguments = $"{ProcessId} \"{ClientExePath}\" \"{ArgsText}\" \"{ClientName}\" {DelayTicks} \"{WatchingMessage}\" \"{RestartMessage}\" {(int)Flags}";
+            MonitorProcess.StartInfo.Arguments = $"{ProcessId} \"{ClientExePath}\" \"{ArgsText}\" \"{monitoring.ClientName}\" {DelayTicks} \"{monitoring.WatchingMessage}\" \"{monitoring.RestartMessage}\" {(int)monitoring.Flags}";
             MonitorProcess.StartInfo.UseShellExecute = false;
             MonitorProcess.StartInfo.CreateNoWindow = true;
 
@@ -132,7 +154,14 @@
             }
 
             if (!Result)
-                LastError = Errors.MonitorNotStarted;
+                error = Errors.MonitorNotStarted;
+            else
+            {
+                monitoring.MonitorProcess = MonitorProcess;
+
+                if (monitoring.IsSymetric)
+                    StartSymetricWatch(monitoring);
+            }
 
             return Result;
         }
@@ -153,13 +182,70 @@
         }
         #endregion
 
+        #region Symetric Watch Thread
+        /// <summary>
+        /// Starts a thread to ensure the monitoring process is restarted if it crashed.
+        /// </summary>
+        /// <param name="monitoring">Monitoring parameters.</param>
+        private static void StartSymetricWatch(Monitoring monitoring)
+        {
+            Thread NewThread = new Thread(new ParameterizedThreadStart(ExecuteSymetricWatch));
+            NewThread.Start(monitoring);
+        }
+
+        /// <summary>
+        /// Ensures the monitoring process is restarted if it crashed.
+        /// </summary>
+        /// <param name="parameter">The monitoring process.</param>
+        private static void ExecuteSymetricWatch(object parameter)
+        {
+            // Wait a bit to ensure the new process is started.
+            // A proper synchronization would be preferable, but at this point I'm too lazy.
+            Thread.Sleep(1000);
+
+            Monitoring Monitoring = parameter as Monitoring;
+            Process MonitorProcess = Monitoring.MonitorProcess;
+            EventWaitHandle CancelEvent = Monitoring.CancelEvent;
+
+            bool IsAlive = true;
+
+            while (IsAlive)
+            {
+                try
+                {
+                    if (CancelEvent.WaitOne(0))
+                        break;
+
+                    IsAlive = !MonitorProcess.HasExited;
+                }
+                catch
+                {
+                    IsAlive = false;
+                }
+
+                if (!IsAlive)
+                {
+                    using (Process p = MonitorProcess)
+                    {
+                        MonitorProcess = null;
+                    }
+
+                    // Wait the same delay as if restarting the original process.
+                    Thread.Sleep(Monitoring.Delay);
+
+                    ZombifyMeInternal(Monitoring, out Errors Error);
+                }
+            }
+        }
+        #endregion
+
         #region Implementation
         /// <summary>
         /// Loads the first executable in resources and write it down to a temporary file.
         /// </summary>
         /// <param name="fileName">The executable file name upon return.</param>
         /// <returns>True if the file could be loaded and copied.</returns>
-        private bool LoadMonitor(out string fileName)
+        private static bool LoadMonitor(out string fileName)
         {
             fileName = null;
 
@@ -183,11 +269,15 @@
         /// <param name="resourceStream">The stream to copy.</param>
         /// <param name="fileName">The executable file name upon return.</param>
         /// <returns>True if the file could be loaded and copied.</returns>
-        private bool LoadMonitor(Stream resourceStream, out string fileName)
+        private static bool LoadMonitor(Stream resourceStream, out string fileName)
         {
             try
             {
-                fileName = Path.GetTempPath() + Guid.NewGuid().ToString() + ".exe";
+                string TemporaryDirectory = Path.GetTempPath();
+                Guid NewGuid = Guid.NewGuid();
+                string TemporaryFileName = $"0{NewGuid}.exe"; // 0 in front to locate it easily at the top of processes when sorted by names.
+
+                fileName = Path.Combine(TemporaryDirectory, TemporaryFileName);
 
                 using (FileStream FileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
                 {

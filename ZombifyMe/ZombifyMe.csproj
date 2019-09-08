@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Include="Errors.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Monitoring.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="../Common/Flags.cs" />
     <Compile Include="../Common/Shared.cs" />
