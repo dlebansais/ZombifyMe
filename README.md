@@ -44,7 +44,8 @@ Zombification.Delay = TimeSpan.FromMinutes(1);
 + How the process is restarted can be controlled with some flags:
   * `NoWindow`: the new process is created with no window.
   * `ForwardArguments` (ON by default): arguments of the original process are reused when starting the new process.
-+ You can enable symetric monitoring. When enabled, the original process and the process that monitors it watch over each other: if one is killed or crashes the other restarts it. When this is enabled it becomes quite difficult to manually kill any of these processes, so setting a large delay such as one minute is recommended.
++ You can enable symetric monitoring setting `IsSymetric` to `true`. When enabled, the original process and the process that monitors it watch over each other: if one is killed or crashes the other restarts it. When this is enabled it becomes quite difficult to manually kill any of these processes, so setting a large delay such as one minute is recommended.
++ In case `IsSymetric` is set, the symetric monitoring could prevent the crash of the original process because there is still thread alive: the monitoring thread. To prevent this unexpected side effect, it is recommended to set `AliveTimeout` to a non-zero value and call `SetAlive` regularly. If `SetAlive` is not called, the monitoring thread will exit, allowing the process to exit prematurely so it can be restarted. Calling `SetAlive` while `IsSymetric` is false or `AliveTimeout` is zero has no effect.
 
 The following example sets all parameters to their default value.
 ```csharp
@@ -53,6 +54,7 @@ Zombification.WatchingMessage = null;
 Zombification.RestartMessage = "ZombifyMe Alert:\nA protected process has been restarted";
 Zombification.Flags = Flags.ForwardArguments;
 Zombification.IsSymetric = false;
+Zombification.AliveTimeout = TimeSpan.Zero;
 ```
 
 # Certification

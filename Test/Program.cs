@@ -23,11 +23,19 @@ namespace Test
             Zombification.Delay = TimeSpan.FromSeconds(5);
             Zombification.Flags = Flags.ForwardArguments | Flags.NoWindow;
             Zombification.IsSymetric = true;
+            Zombification.AliveTimeout = TimeSpan.FromSeconds(10);
             Zombification.ZombifyMe();
 
             DialogResult ShowResult = MessageBox.Show("ZombifyMe() done", "", MessageBoxButtons.OKCancel);
 
-            Thread.Sleep(20000);
+            Thread.Sleep(5000);
+            Zombification.SetAlive();
+            Thread.Sleep(5000);
+            Zombification.SetAlive();
+            Thread.Sleep(5000);
+            Zombification.SetAlive();
+            Thread.Sleep(5000);
+            Zombification.SetAlive();
 
             if ((Zombification != null && IsRestart) || ShowResult == DialogResult.Cancel)
             {

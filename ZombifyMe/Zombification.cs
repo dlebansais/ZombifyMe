@@ -74,6 +74,11 @@
         public bool IsSymetric { get; set; } = false;
 
         /// <summary>
+        /// Gets and sets the timeout for the main thread to notify it's alive.
+        /// </summary>
+        public TimeSpan AliveTimeout { get; set; } = TimeSpan.Zero;
+
+        /// <summary>
         /// The last error encountered by <see cref="ZombifyMe"/>.
         /// </summary>
         public Errors LastError { get; private set; } = Errors.Success;
@@ -86,7 +91,7 @@
         /// <returns>True if successful; False otherwise and <see cref="LastError"/> contains the error.</returns>
         public bool ZombifyMe()
         {
-            Monitoring NewMonitoring = new Monitoring() { ClientName = ClientName, Delay = Delay, WatchingMessage = WatchingMessage, RestartMessage = RestartMessage, Flags = Flags, IsSymetric = IsSymetric };
+            Monitoring NewMonitoring = new Monitoring() { ClientName = ClientName, Delay = Delay, WatchingMessage = WatchingMessage, RestartMessage = RestartMessage, Flags = Flags, IsSymetric = IsSymetric, AliveTimeout = AliveTimeout };
             Debug.Assert(NewMonitoring.CancelEvent == null);
 
             bool Result = ZombifyMeInternal(NewMonitoring, out Errors Error);
@@ -180,6 +185,14 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Tells the monitoring thread the main thread is alive.
+        /// </summary>
+        public void SetAlive()
+        {
+            AliveWatch.Restart();
+        }
         #endregion
 
         #region Symetric Watch Thread
@@ -206,10 +219,12 @@
             Monitoring Monitoring = parameter as Monitoring;
             Process MonitorProcess = Monitoring.MonitorProcess;
             EventWaitHandle CancelEvent = Monitoring.CancelEvent;
+            TimeSpan AliveTimeout = Monitoring.AliveTimeout;
 
             bool IsAlive = true;
+            AliveWatch.Start();
 
-            while (IsAlive)
+            while (IsAlive && (AliveTimeout == TimeSpan.Zero || AliveWatch.Elapsed < AliveTimeout))
             {
                 try
                 {
@@ -237,6 +252,8 @@
                 }
             }
         }
+
+        private static Stopwatch AliveWatch = new Stopwatch();
         #endregion
 
         #region Implementation

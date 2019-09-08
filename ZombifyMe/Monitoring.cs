@@ -40,6 +40,11 @@
         public bool IsSymetric { get; set; }
 
         /// <summary>
+        /// Gets and sets the timeout for the main thread to notify it's alive.
+        /// </summary>
+        public TimeSpan AliveTimeout { get; set; }
+
+        /// <summary>
         /// The monitoring process.
         /// </summary>
         public Process MonitorProcess { get; set; }
