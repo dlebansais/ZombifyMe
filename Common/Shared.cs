@@ -1,5 +1,7 @@
 ﻿namespace ZombifyMe
 {
+    using System;
+
     /// <summary>
     /// Provides common definitions for the ZombifyMe library and the monitoring program.
     /// </summary>
@@ -15,9 +17,14 @@
         /// Name of the environment variable to use to indicate a process is a restarted one.
         /// </summary>
         internal static readonly string RestartEnvironmentVariable = "{8DCA9D40-5228-4ECE-85EA-FCEE0DC75E76}";
+
+        /// <summary>
+        /// The period for checking if a process has disappeared.
+        /// </summary>
+        internal static readonly TimeSpan CheckInterval = TimeSpan.FromSeconds(1);
         #endregion
 
-        #region Constants
+        #region Tools
         /// <summary>
         /// Gets the unique name of the cancellation event for a given client.
         /// </summary>

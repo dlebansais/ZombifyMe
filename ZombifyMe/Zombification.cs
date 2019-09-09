@@ -228,7 +228,7 @@
             {
                 try
                 {
-                    if (CancelEvent.WaitOne(0))
+                    if (CancelEvent.WaitOne(Shared.CheckInterval))
                         break;
 
                     IsAlive = !MonitorProcess.HasExited;

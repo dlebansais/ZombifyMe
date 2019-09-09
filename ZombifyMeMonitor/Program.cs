@@ -11,13 +11,6 @@
     /// </summary>
     public class Program
     {
-        #region Constants
-        /// <summary>
-        /// The period for checking if a process has disappeared.
-        /// </summary>
-        public static readonly TimeSpan CheckInterval = TimeSpan.FromSeconds(10);
-        #endregion
-
         #region Implementation
         /// <summary>
         /// Entry points of the program.
@@ -94,7 +87,7 @@
         {
             while (true)
             {
-                if (cancelEvent.WaitOne(CheckInterval))
+                if (cancelEvent.WaitOne(Shared.CheckInterval))
                 {
                     isRestarted = false;
                     break;
