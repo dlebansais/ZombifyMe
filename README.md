@@ -1,7 +1,7 @@
 # Zombify Me
 [![Build Status](https://travis-ci.com/dlebansais/ZombifyMe.svg?branch=master)](https://travis-ci.com/dlebansais/ZombifyMe)
 
-A library that can restart the program its linked with if it crashes unexpectedly.
+A library that can restart the program it's linked with if it crashes unexpectedly.
 
 To use it, just include ZombifyMe.dll as a reference in your project and add the following code.
 
