@@ -5,7 +5,7 @@ using ZombifyMe;
 
 namespace Test
 {
-    public class Program
+    public static class Program
     {
         public static bool IsRestart { get { return Zombification.IsRestart; } }
 
@@ -17,9 +17,7 @@ namespace Test
 
             MessageBox.Show(Message);
 
-            Zombification Zombification = null;
-
-            Zombification = new Zombification("test");
+            Zombification Zombification = new Zombification("test");
             Zombification.Delay = TimeSpan.FromSeconds(5);
             Zombification.Flags = Flags.ForwardArguments | Flags.NoWindow;
             Zombification.IsSymetric = true;
@@ -37,7 +35,7 @@ namespace Test
             Thread.Sleep(5000);
             Zombification.SetAlive();
 
-            if ((Zombification != null && IsRestart) || ShowResult == DialogResult.Cancel)
+            if (IsRestart || ShowResult == DialogResult.Cancel)
             {
                 Zombification.Cancel();
                 MessageBox.Show("Cancel() done");

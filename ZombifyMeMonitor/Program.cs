@@ -9,7 +9,7 @@
     /// <summary>
     /// The main class for this program.
     /// </summary>
-    public class Program
+    public static class Program
     {
         #region Implementation
         /// <summary>
@@ -20,7 +20,7 @@
         public static int Main(string[] args)
         {
             // Check arguments; They should be valid since only ZombifyMe is starting us.
-            if (args == null && args.Length < 8)
+            if (args == null || args.Length < 8)
                 return -1;
 
             // Read the ID of the process to monitor.
@@ -32,7 +32,8 @@
             string ClientName = args[3];
 
             // Open the cancel event. This event uses two unique names, one for the ZombifyMe, the other from the client.
-            if (!OpenCancelEvent(Shared.GetCancelEventName(ClientName), out EventWaitHandle CancelEvent))
+            using EventWaitHandle? CancelEvent = EventWaitHandle.OpenExisting(SharedDefinitions.GetCancelEventName(ClientName));
+            if (CancelEvent == null)
                 return -3;
 
             // Read the delay, in ticks.
@@ -57,19 +58,12 @@
             return IsRestarted ? 1 : 0;
         }
 
-        private static bool OpenCancelEvent(string cancelEventName, out EventWaitHandle cancelEvent)
+        private static EventWaitHandle? OpenCancelEvent(string cancelEventName, out bool isOpened)
         {
-            cancelEvent = null;
+            EventWaitHandle CancelEvent = EventWaitHandle.OpenExisting(cancelEventName);
+            isOpened = CancelEvent != null;
 
-            try
-            {
-                cancelEvent = EventWaitHandle.OpenExisting(cancelEventName);
-                return cancelEvent != null;
-            }
-            catch
-            {
-                return false;
-            }
+            return CancelEvent;
         }
 
         /// <summary>
@@ -87,7 +81,7 @@
         {
             while (true)
             {
-                if (cancelEvent.WaitOne(Shared.CheckInterval))
+                if (cancelEvent.WaitOne(SharedDefinitions.CheckInterval))
                 {
                     isRestarted = false;
                     break;
@@ -134,7 +128,7 @@
                 StartInfo.CreateNoWindow = true;
 
                 // Setting this variable will tell the process it's been restarted. The value doesn't matter.
-                StartInfo.EnvironmentVariables[Shared.RestartEnvironmentVariable] = "*";
+                StartInfo.EnvironmentVariables[SharedDefinitions.RestartEnvironmentVariable] = "*";
             }
 
             bool Result;

@@ -12,7 +12,7 @@
         /// <summary>
         /// Gets the name of the client.
         /// </summary>
-        public string ClientName { get; set; }
+        public string ClientName { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets and sets the delay between when a process has crashed and when it's restarted.
@@ -22,12 +22,12 @@
         /// <summary>
         /// Message to display when watching begins.
         /// </summary>
-        public string WatchingMessage { get; set; }
+        public string WatchingMessage { get; set; } = string.Empty;
 
         /// <summary>
         /// Message to display after a process is restarted.
         /// </summary>
-        public string RestartMessage { get; set; }
+        public string RestartMessage { get; set; } = string.Empty;
 
         /// <summary>
         /// Flags for the restarted process.
@@ -47,11 +47,11 @@
         /// <summary>
         /// The monitoring process.
         /// </summary>
-        public Process MonitorProcess { get; set; }
+        public Process? MonitorProcess { get; set; }
 
         /// <summary>
         /// The event used to cancel monitoring.
         /// </summary>
-        public EventWaitHandle CancelEvent { get; set; }
+        public EventWaitHandle? CancelEvent { get; set; }
     }
 }

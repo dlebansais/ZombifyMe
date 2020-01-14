@@ -5,18 +5,18 @@
     /// <summary>
     /// Provides common definitions for the ZombifyMe library and the monitoring program.
     /// </summary>
-    public static class Shared
+    public static class SharedDefinitions
     {
         #region Constants
         /// <summary>
         /// Unique name to use for the cancellation event.
         /// </summary>
-        private static readonly string CancelEventName = "{02702794-5BFC-4C42-8714-AEACCB337019}";
+        private const string CancelEventName = "{02702794-5BFC-4C42-8714-AEACCB337019}";
 
         /// <summary>
         /// Name of the environment variable to use to indicate a process is a restarted one.
         /// </summary>
-        internal static readonly string RestartEnvironmentVariable = "{8DCA9D40-5228-4ECE-85EA-FCEE0DC75E76}";
+        internal const string RestartEnvironmentVariable = "{8DCA9D40-5228-4ECE-85EA-FCEE0DC75E76}";
 
         /// <summary>
         /// The period for checking if a process has disappeared.

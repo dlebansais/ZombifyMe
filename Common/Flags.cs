@@ -1,8 +1,11 @@
 ﻿namespace ZombifyMe
 {
+    using System;
+
     /// <summary>
     /// Flags that indicate how a process should be restarted.
     /// </summary>
+    [Flags]
     public enum Flags
     {
         /// <summary>

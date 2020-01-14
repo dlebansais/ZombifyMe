@@ -20,7 +20,7 @@
         }
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        public static extern bool MoveFileEx(string lpExistingFileName, string lpNewFileName, MoveFileFlags dwFlags);
+        public static extern bool MoveFileEx(string? lpExistingFileName, string? lpNewFileName, MoveFileFlags dwFlags);
     }
 #pragma warning restore SA1602 // Enumeration items should be documented
 #pragma warning restore SA1600 // Elements should be documented

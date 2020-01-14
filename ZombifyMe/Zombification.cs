@@ -34,7 +34,7 @@
                 try
                 {
                     IDictionary EnvironmentVariables = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Process);
-                    return EnvironmentVariables.Contains(Shared.RestartEnvironmentVariable);
+                    return EnvironmentVariables.Contains(SharedDefinitions.RestartEnvironmentVariable);
                 }
                 catch
                 {
@@ -56,7 +56,7 @@
         /// <summary>
         /// Message to display when watching begins.
         /// </summary>
-        public string WatchingMessage { get; set; } = null;
+        public string WatchingMessage { get; set; } = string.Empty;
 
         /// <summary>
         /// Message to display after a process is restarted.
@@ -136,12 +136,12 @@
             long DelayTicks = monitoring.Delay.Ticks;
 
             if (monitoring.CancelEvent == null)
-                monitoring.CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, Shared.GetCancelEventName(monitoring.ClientName));
+                monitoring.CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, SharedDefinitions.GetCancelEventName(monitoring.ClientName));
             else
                 monitoring.CancelEvent.Reset();
 
             // Start the monitoring process.
-            Process MonitorProcess = new Process();
+            using Process MonitorProcess = new Process();
             MonitorProcess.StartInfo.FileName = MonitorProcessFileName;
             MonitorProcess.StartInfo.Arguments = $"{ProcessId} \"{ClientExePath}\" \"{ArgsText}\" \"{monitoring.ClientName}\" {DelayTicks} \"{monitoring.WatchingMessage}\" \"{monitoring.RestartMessage}\" {(int)monitoring.Flags}";
             MonitorProcess.StartInfo.UseShellExecute = false;
@@ -189,7 +189,7 @@
         /// <summary>
         /// Tells the monitoring thread the main thread is alive.
         /// </summary>
-        public void SetAlive()
+        public static void SetAlive()
         {
             AliveWatch.Restart();
         }
@@ -216,10 +216,15 @@
             // A proper synchronization would be preferable, but at this point I'm too lazy.
             Thread.Sleep(1000);
 
-            Monitoring Monitoring = parameter as Monitoring;
-            Process MonitorProcess = Monitoring.MonitorProcess;
-            EventWaitHandle CancelEvent = Monitoring.CancelEvent;
+            Monitoring Monitoring = (Monitoring)parameter;
+            Process? MonitorProcess = Monitoring.MonitorProcess;
+            EventWaitHandle? CancelEvent = Monitoring.CancelEvent;
             TimeSpan AliveTimeout = Monitoring.AliveTimeout;
+
+            Debug.Assert(MonitorProcess != null);
+            Debug.Assert(CancelEvent != null);
+            if (MonitorProcess == null || CancelEvent == null)
+                return;
 
             bool IsAlive = true;
             AliveWatch.Start();
@@ -228,10 +233,10 @@
             {
                 try
                 {
-                    if (CancelEvent.WaitOne(Shared.CheckInterval))
+                    if (CancelEvent.WaitOne(SharedDefinitions.CheckInterval))
                         break;
 
-                    IsAlive = !MonitorProcess.HasExited;
+                    IsAlive = MonitorProcess != null && !MonitorProcess.HasExited;
                 }
                 catch
                 {
@@ -240,7 +245,7 @@
 
                 if (!IsAlive)
                 {
-                    using (Process p = MonitorProcess)
+                    using (Process? p = MonitorProcess)
                     {
                         MonitorProcess = null;
                     }
@@ -264,12 +269,12 @@
         /// <returns>True if the file could be loaded and copied.</returns>
         private static bool LoadMonitor(out string fileName)
         {
-            fileName = null;
+            fileName = string.Empty;
 
             Assembly CurrentAssembly = Assembly.GetExecutingAssembly();
             string[] ResourceNames = CurrentAssembly.GetManifestResourceNames();
             foreach (string ResourceName in ResourceNames)
-                if (ResourceName.EndsWith(".exe"))
+                if (ResourceName.EndsWith(".exe", StringComparison.InvariantCulture))
                 {
                     using (Stream ResourceStream = CurrentAssembly.GetManifestResourceStream(ResourceName))
                     {
@@ -308,12 +313,12 @@
             }
             catch
             {
-                fileName = null;
+                fileName = string.Empty;
                 return false;
             }
         }
 
-        private EventWaitHandle CancelEvent;
+        private EventWaitHandle? CancelEvent;
         #endregion
     }
 }
