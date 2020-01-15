@@ -9,13 +9,22 @@ namespace TestZombifyMe
     {
         public static bool IsRestart { get { return Zombification.IsRestart; } }
 
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             string Message = $"IsRestart: {IsRestart}, Arguments: {args.Length}";
             foreach (string Arg in args)
                 Message += ", " + Arg;
 
-            MessageBox.Show(Message);
+            bool IsCoverage = args.Length > 1 && args[1] == "coverage";
+            bool IsContinue = args.Length > 1 && args[1] == "continue";
+
+            if (IsContinue)
+            {
+                ShowDialog(false, "Proceeding to tests", MessageBoxButtons.OK);
+                return;
+            }
+
+            ShowDialog(IsCoverage, Message, MessageBoxButtons.OK);
 
             Zombification Zombification = new Zombification("test");
             Zombification.Delay = TimeSpan.FromSeconds(5);
@@ -24,7 +33,7 @@ namespace TestZombifyMe
             Zombification.AliveTimeout = TimeSpan.FromSeconds(10);
             Zombification.ZombifyMe();
 
-            DialogResult ShowResult = MessageBox.Show("ZombifyMe() done", "", MessageBoxButtons.OKCancel);
+            DialogResult ShowResult = ShowDialog(IsCoverage, "ZombifyMe() done", MessageBoxButtons.OKCancel);
 
             Thread.Sleep(5000);
             Zombification.SetAlive();
@@ -38,8 +47,17 @@ namespace TestZombifyMe
             if (IsRestart || ShowResult == DialogResult.Cancel)
             {
                 Zombification.Cancel();
-                MessageBox.Show("Cancel() done");
+
+                ShowDialog(IsCoverage, "Cancel() done", MessageBoxButtons.OK);
             }
+        }
+
+        private static DialogResult ShowDialog(bool isCoverage, string text, MessageBoxButtons buttons)
+        {
+            if (isCoverage)
+                return DialogResult.Cancel;
+            else
+                return MessageBox.Show(text, "", buttons);
         }
     }
 }
