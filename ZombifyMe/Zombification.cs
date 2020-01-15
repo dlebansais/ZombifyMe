@@ -141,7 +141,10 @@
                 monitoring.CancelEvent.Reset();
 
             // Start the monitoring process.
-            using Process MonitorProcess = new Process();
+            // Don't dispose of it, it's passed to another thread.
+#pragma warning disable CA2000 // Dispose objects before losing scope
+            Process MonitorProcess = new Process();
+#pragma warning restore CA2000 // Dispose objects before losing scope
             MonitorProcess.StartInfo.FileName = MonitorProcessFileName;
             MonitorProcess.StartInfo.Arguments = $"{ProcessId} \"{ClientExePath}\" \"{ArgsText}\" \"{monitoring.ClientName}\" {DelayTicks} \"{monitoring.WatchingMessage}\" \"{monitoring.RestartMessage}\" {(int)monitoring.Flags}";
             MonitorProcess.StartInfo.UseShellExecute = false;
