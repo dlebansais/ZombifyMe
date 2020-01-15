@@ -3,7 +3,7 @@ using System.Threading;
 using System.Windows.Forms;
 using ZombifyMe;
 
-namespace Test
+namespace TestZombifyMe
 {
     public static class Program
     {
