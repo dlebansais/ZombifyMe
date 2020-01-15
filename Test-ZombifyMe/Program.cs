@@ -11,12 +11,12 @@ namespace TestZombifyMe
 
         private static void Main(string[] args)
         {
+            bool IsCoverage = args.Length > 0 && args[0] == "coverage";
+            bool IsContinue = args.Length > 0 && args[0] == "continue";
+
             string Message = $"IsRestart: {IsRestart}, Arguments: {args.Length}";
             foreach (string Arg in args)
                 Message += ", " + Arg;
-
-            bool IsCoverage = args.Length > 1 && args[1] == "coverage";
-            bool IsContinue = args.Length > 1 && args[1] == "continue";
 
             if (IsContinue)
             {
