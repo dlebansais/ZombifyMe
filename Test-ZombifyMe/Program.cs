@@ -11,20 +11,14 @@ namespace TestZombifyMe
 
         private static void Main(string[] args)
         {
-            bool IsCoverage = args.Length > 0 && args[0] == "coverage";
-            bool IsContinue = args.Length > 0 && args[0] == "continue";
+            bool IsCoverageOk = args.Length > 0 && args[0] == "coverageOk";
+            bool IsCoverageCancel = args.Length > 0 && args[0] == "coverageCancel";
 
             string Message = $"IsRestart: {IsRestart}, Arguments: {args.Length}";
             foreach (string Arg in args)
                 Message += ", " + Arg;
 
-            if (IsContinue)
-            {
-                ShowDialog(false, "Proceeding to tests", MessageBoxButtons.OK);
-                return;
-            }
-
-            ShowDialog(IsCoverage, Message, MessageBoxButtons.OK);
+            ShowDialog(IsCoverageOk, IsCoverageCancel, Message, MessageBoxButtons.OK);
 
             Zombification Zombification = new Zombification("test");
             Zombification.Delay = TimeSpan.FromSeconds(5);
@@ -33,7 +27,7 @@ namespace TestZombifyMe
             Zombification.AliveTimeout = TimeSpan.FromSeconds(10);
             Zombification.ZombifyMe();
 
-            DialogResult ShowResult = ShowDialog(IsCoverage, "ZombifyMe() done", MessageBoxButtons.OKCancel);
+            DialogResult ShowResult = ShowDialog(IsCoverageOk, IsCoverageCancel, "ZombifyMe() done", MessageBoxButtons.OKCancel);
 
             Thread.Sleep(5000);
             Zombification.SetAlive();
@@ -48,13 +42,15 @@ namespace TestZombifyMe
             {
                 Zombification.Cancel();
 
-                ShowDialog(IsCoverage, "Cancel() done", MessageBoxButtons.OK);
+                ShowDialog(IsCoverageOk, IsCoverageCancel, "Cancel() done", MessageBoxButtons.OK);
             }
         }
 
-        private static DialogResult ShowDialog(bool isCoverage, string text, MessageBoxButtons buttons)
+        private static DialogResult ShowDialog(bool isCoverageOk, bool isCoverageCancel, string text, MessageBoxButtons buttons)
         {
-            if (isCoverage)
+            if (isCoverageOk)
+                return DialogResult.OK;
+            else if (isCoverageCancel)
                 return DialogResult.Cancel;
             else
                 return MessageBox.Show(text, "", buttons);

@@ -27,3 +27,4 @@ comment:
 
 ignore:
   - "./ZombifyMe/Properties/*"
+  - "./Test-ZombifyMe/*"
