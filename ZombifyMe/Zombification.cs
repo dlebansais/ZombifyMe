@@ -135,6 +135,10 @@
 
             monitoring.CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, SharedDefinitions.GetCancelEventName(monitoring.ClientName));
 
+            // Use this impossible value as a hack to fail the launch.
+            if (monitoring.Delay == TimeSpan.MinValue)
+                MonitorProcessFileName = string.Empty;
+
             // Start the monitoring process.
             // Don't dispose of it, it's passed to another thread.
 #pragma warning disable CA2000 // Dispose objects before losing scope
@@ -218,26 +222,46 @@
             Thread.Sleep(1000);
 
             Monitoring Monitoring = (Monitoring)parameter;
-            Process? MonitorProcess = Monitoring.MonitorProcess;
-            EventWaitHandle? CancelEvent = Monitoring.CancelEvent;
-            TimeSpan AliveTimeout = Monitoring.AliveTimeout;
+            Debug.Assert(Monitoring.MonitorProcess != null);
+            Debug.Assert(Monitoring.CancelEvent != null);
 
-            Debug.Assert(MonitorProcess != null);
-            Debug.Assert(CancelEvent != null);
-            if (MonitorProcess == null || CancelEvent == null)
-                return;
+#pragma warning disable CS8604 // Possible null reference argument.
+            ExecuteSymetricWatch(Monitoring, Monitoring.MonitorProcess, Monitoring.CancelEvent);
+#pragma warning restore CS8604 // Possible null reference argument.
+        }
+
+        /// <summary>
+        /// Ensures the monitoring process is restarted if it crashed.
+        /// </summary>
+        /// <param name="monitoring">The monitoring information.</param>
+        /// <param name="monitorProcess">The monitoring process.</param>
+        /// <param name="cancelEvent">The cancelation event.</param>
+        private static void ExecuteSymetricWatch(Monitoring monitoring, Process monitorProcess, EventWaitHandle cancelEvent)
+        {
+            TimeSpan AliveTimeout = monitoring.AliveTimeout;
 
             bool IsAlive = true;
             AliveWatch.Start();
 
-            while (IsAlive && (AliveTimeout == TimeSpan.Zero || AliveWatch.Elapsed < AliveTimeout))
+            while (true)
             {
+                bool Exit = false;
+
+                if (!IsAlive)
+                    Exit = true;
+
+                if (AliveTimeout != TimeSpan.Zero && AliveWatch.Elapsed >= AliveTimeout)
+                    Exit = true;
+
+                if (Exit)
+                    break;
+
                 try
                 {
-                    if (CancelEvent.WaitOne(SharedDefinitions.CheckInterval))
+                    if (cancelEvent.WaitOne(SharedDefinitions.CheckInterval))
                         break;
 
-                    IsAlive = MonitorProcess != null && !MonitorProcess.HasExited;
+                    IsAlive = !monitorProcess.HasExited;
                 }
                 catch
                 {
@@ -246,15 +270,14 @@
 
                 if (!IsAlive)
                 {
-                    using (Process? p = MonitorProcess)
+                    using (Process p = monitorProcess)
                     {
-                        MonitorProcess = null;
                     }
 
                     // Wait the same delay as if restarting the original process.
-                    Thread.Sleep(Monitoring.Delay);
+                    Thread.Sleep(monitoring.Delay);
 
-                    ZombifyMeInternal(Monitoring, out Errors Error);
+                    ZombifyMeInternal(monitoring, out Errors Error);
                 }
             }
         }

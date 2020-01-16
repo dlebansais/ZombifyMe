@@ -28,6 +28,8 @@ namespace TestZombifyMe
             bool IsCoverageNoForward = args.Length > 0 && args[0] == "coverageNoForward";
             bool IsCoverageBadFolder = args.Length > 0 && args[0] == "coverageBadFolder";
             bool IsCoverageNotSymetric = args.Length > 0 && args[0] == "coverageNotSymetric";
+            bool IsCoverageFailLaunch = args.Length > 0 && args[0] == "coverageFailLaunch";
+            bool IsCoverageNoKeepAlive = args.Length > 0 && args[0] == "coverageNoKeepAlive";
             bool IsManual = args.Length > 0 && args[0] == "manual";
 
             string Message = $"IsRestart: {IsRestart}, Arguments: {args.Length}";
@@ -37,27 +39,41 @@ namespace TestZombifyMe
             ShowDialog(IsManual, IsCoverageCancel, Message, MessageBoxButtons.OK);
 
             Zombification Zombification = new Zombification("test");
-            Zombification.Delay = TimeSpan.FromSeconds(5);
+
+            if (IsCoverageFailLaunch)
+                Zombification.Delay = TimeSpan.MinValue;
+            else
+                Zombification.Delay = TimeSpan.FromSeconds(5);
+
             if (IsCoverageNoForward)
                 Zombification.Flags = Flags.NoWindow;
             else
                 Zombification.Flags = Flags.ForwardArguments | Flags.NoWindow;
+
             Zombification.IsSymetric = !IsCoverageNotSymetric;
             Zombification.AliveTimeout = TimeSpan.FromSeconds(10);
+
             if (IsCoverageBadFolder)
                 Zombification.MonitorFolder = "*";
+
+            Zombification.Cancel();
             Zombification.ZombifyMe();
 
             DialogResult ShowResult = ShowDialog(IsManual, IsCoverageCancel, "ZombifyMe() done", MessageBoxButtons.OKCancel);
 
-            Thread.Sleep(5000);
-            Zombification.SetAlive();
-            Thread.Sleep(5000);
-            Zombification.SetAlive();
-            Thread.Sleep(5000);
-            Zombification.SetAlive();
-            Thread.Sleep(5000);
-            Zombification.SetAlive();
+            if (IsCoverageNoKeepAlive)
+                Thread.Sleep(20000);
+            else
+            {
+                Thread.Sleep(5000);
+                Zombification.SetAlive();
+                Thread.Sleep(5000);
+                Zombification.SetAlive();
+                Thread.Sleep(5000);
+                Zombification.SetAlive();
+                Thread.Sleep(5000);
+                Zombification.SetAlive();
+            }
 
             if (IsRestart || ShowResult == DialogResult.Cancel)
             {
