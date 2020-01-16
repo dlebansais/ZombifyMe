@@ -9,11 +9,20 @@ if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml del .\Test-Z
 call .\coverage\app.bat ZombifyMe Debug coverageCancel
 call .\coverage\wait.bat 60
 
-call .\coverage\app.bat ZombifyMe Debug coverageOk
+call .\coverage\app.bat ZombifyMe Debug arg1 arg2
+call .\coverage\wait.bat 60
+
+call .\coverage\app.bat ZombifyMe Debug coverageNoForward
+call .\coverage\wait.bat 60
+
+call .\coverage\app.bat ZombifyMe Debug coverageBadFolder
+call .\coverage\wait.bat 60
+
+call .\coverage\app.bat ZombifyMe Debug coverageNotSymetric
 call .\coverage\wait.bat 60
 
 call ..\Certification\set_tokens.bat
-rem if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml .\packages\Codecov.1.9.0\tools\codecov -f ".\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml" -t "%ZOMBIFYME_CODECOV_TOKEN%"
+if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml .\packages\Codecov.1.9.0\tools\codecov -f ".\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml" -t "%ZOMBIFYME_CODECOV_TOKEN%"
 goto end
 
 :error1

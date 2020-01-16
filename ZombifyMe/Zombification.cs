@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.IO;
     using System.Reflection;
+    using System.Security;
     using System.Threading;
 
     /// <summary>
@@ -27,19 +28,13 @@
         /// <summary>
         /// True if the current process is a restarted one.
         /// </summary>
+        /// <exception cref="SecurityException">The caller does not have read permission for process environment variables.</exception>
         public static bool IsRestart
         {
             get
             {
-                try
-                {
-                    IDictionary EnvironmentVariables = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Process);
-                    return EnvironmentVariables.Contains(SharedDefinitions.RestartEnvironmentVariable);
-                }
-                catch
-                {
-                    return false;
-                }
+                IDictionary EnvironmentVariables = Environment.GetEnvironmentVariables(EnvironmentVariableTarget.Process);
+                return EnvironmentVariables.Contains(SharedDefinitions.RestartEnvironmentVariable);
             }
         }
 
@@ -79,6 +74,11 @@
         public TimeSpan AliveTimeout { get; set; } = TimeSpan.Zero;
 
         /// <summary>
+        /// Folder where to put the monitoring processes. If empty, the temporary folder is used.
+        /// </summary>
+        public string MonitorFolder { get; set; } = string.Empty;
+
+        /// <summary>
         /// The last error encountered by <see cref="ZombifyMe"/>.
         /// </summary>
         public Errors LastError { get; private set; } = Errors.Success;
@@ -91,7 +91,7 @@
         /// <returns>True if successful; False otherwise and <see cref="LastError"/> contains the error.</returns>
         public bool ZombifyMe()
         {
-            Monitoring NewMonitoring = new Monitoring() { ClientName = ClientName, Delay = Delay, WatchingMessage = WatchingMessage, RestartMessage = RestartMessage, Flags = Flags, IsSymetric = IsSymetric, AliveTimeout = AliveTimeout };
+            Monitoring NewMonitoring = new Monitoring() { ClientName = ClientName, Delay = Delay, WatchingMessage = WatchingMessage, RestartMessage = RestartMessage, Flags = Flags, IsSymetric = IsSymetric, AliveTimeout = AliveTimeout, MonitorFolder = MonitorFolder };
             Debug.Assert(NewMonitoring.CancelEvent == null);
 
             bool Result = ZombifyMeInternal(NewMonitoring, out Errors Error);
@@ -103,11 +103,9 @@
 
         private static bool ZombifyMeInternal(Monitoring monitoring, out Errors error)
         {
-            monitoring.MonitorProcess = null;
-            monitoring.CancelEvent = null;
             error = Errors.Success;
 
-            if (!LoadMonitor(out string MonitorProcessFileName))
+            if (!LoadMonitor(monitoring.MonitorFolder, out string MonitorProcessFileName))
             {
                 error = Errors.UnableToLoadSource;
                 return false;
@@ -135,10 +133,7 @@
 
             long DelayTicks = monitoring.Delay.Ticks;
 
-            if (monitoring.CancelEvent == null)
-                monitoring.CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, SharedDefinitions.GetCancelEventName(monitoring.ClientName));
-            else
-                monitoring.CancelEvent.Reset();
+            monitoring.CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, SharedDefinitions.GetCancelEventName(monitoring.ClientName));
 
             // Start the monitoring process.
             // Don't dispose of it, it's passed to another thread.
@@ -162,7 +157,10 @@
             }
 
             if (!Result)
+            {
                 error = Errors.MonitorNotStarted;
+                monitoring.MonitorProcess = null;
+            }
             else
             {
                 monitoring.MonitorProcess = MonitorProcess;
@@ -268,41 +266,51 @@
         /// <summary>
         /// Loads the first executable in resources and write it down to a temporary file.
         /// </summary>
+        /// <param name="monitorFolder">Folder where to write the file.</param>
         /// <param name="fileName">The executable file name upon return.</param>
         /// <returns>True if the file could be loaded and copied.</returns>
-        private static bool LoadMonitor(out string fileName)
+        private static bool LoadMonitor(string monitorFolder, out string fileName)
         {
             fileName = string.Empty;
 
+            string ResourceName = string.Empty;
+
             Assembly CurrentAssembly = Assembly.GetExecutingAssembly();
             string[] ResourceNames = CurrentAssembly.GetManifestResourceNames();
-            foreach (string ResourceName in ResourceNames)
-                if (ResourceName.EndsWith(".exe", StringComparison.InvariantCulture))
-                {
-                    using (Stream ResourceStream = CurrentAssembly.GetManifestResourceStream(ResourceName))
-                    {
-                        return LoadMonitor(ResourceStream, out fileName);
-                    }
-                }
+            foreach (string Item in ResourceNames)
+                if (Item.EndsWith(".exe", StringComparison.InvariantCulture))
+                    ResourceName = Item;
 
-            return false;
+            Debug.Assert(ResourceName.Length > 0);
+
+            using (Stream ResourceStream = CurrentAssembly.GetManifestResourceStream(ResourceName))
+            {
+                return LoadMonitor(monitorFolder, ResourceStream, out fileName);
+            }
         }
 
         /// <summary>
         /// Writes down a stream to a temporary file.
         /// </summary>
+        /// <param name="monitorFolder">Folder where to write the file.</param>
         /// <param name="resourceStream">The stream to copy.</param>
         /// <param name="fileName">The executable file name upon return.</param>
         /// <returns>True if the file could be loaded and copied.</returns>
-        private static bool LoadMonitor(Stream resourceStream, out string fileName)
+        private static bool LoadMonitor(string monitorFolder, Stream resourceStream, out string fileName)
         {
             try
             {
-                string TemporaryDirectory = Path.GetTempPath();
+                string DestinationDirectory;
+
+                if (monitorFolder.Length == 0)
+                    DestinationDirectory = Path.GetTempPath();
+                else
+                    DestinationDirectory = monitorFolder;
+
                 Guid NewGuid = Guid.NewGuid();
                 string TemporaryFileName = $"0{NewGuid}.exe"; // 0 in front to locate it easily at the top of processes when sorted by names.
 
-                fileName = Path.Combine(TemporaryDirectory, TemporaryFileName);
+                fileName = Path.Combine(DestinationDirectory, TemporaryFileName);
 
                 using (FileStream FileStream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
                 {

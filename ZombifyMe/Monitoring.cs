@@ -45,6 +45,11 @@
         public TimeSpan AliveTimeout { get; set; }
 
         /// <summary>
+        /// Folder where to put the monitoring processes. If empty, the temporary folder is used.
+        /// </summary>
+        public string MonitorFolder { get; set; } = string.Empty;
+
+        /// <summary>
         /// The monitoring process.
         /// </summary>
         public Process? MonitorProcess { get; set; }
