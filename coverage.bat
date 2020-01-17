@@ -9,8 +9,18 @@ if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml del .\Test-Z
 call .\coverage\app-monitor.bat ZombifyMe Debug 0
 call .\coverage\wait.bat 5
 
-call .\coverage\app-monitor.bat ZombifyMe Debug "! .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe manual Coverage 10 watching Restart 0"
+call .\coverage\app-monitor.bat ZombifyMe Debug "! .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart 0"
 call .\coverage\wait.bat 5
+
+call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage ! watching Restart 0"
+call .\coverage\wait.bat 5
+
+call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart !"
+call .\coverage\wait.bat 5
+
+call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart 0"
+call .\coverage\wait.bat 5
+goto end
 
 call .\coverage\app.bat ZombifyMe Debug coverageCancel
 call .\coverage\wait.bat 60

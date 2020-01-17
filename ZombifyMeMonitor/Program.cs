@@ -20,7 +20,9 @@
         public static int Main(string[] args)
         {
             // Check arguments; They should be valid since only ZombifyMe is starting us.
-            if (args == null || args.Length < 8)
+#pragma warning disable CA1062 // Validate arguments of public methods
+            if (args.Length < 8)
+#pragma warning restore CA1062 // Validate arguments of public methods
                 return -1;
 
             // Read the ID of the process to monitor.
