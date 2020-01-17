@@ -20,7 +20,7 @@ call .\coverage\wait.bat 5
 
 call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart 0"
 call .\coverage\wait.bat 5
-goto end
+goto skip
 
 call .\coverage\app.bat ZombifyMe Debug coverageCancel
 call .\coverage\wait.bat 60
@@ -45,6 +45,8 @@ call .\coverage\wait.bat 60
 
 call .\coverage\app.bat ZombifyMe Debug coverageNoKeepAlive
 call .\coverage\wait.bat 60
+
+:skip
 
 call ..\Certification\set_tokens.bat
 if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml .\packages\Codecov.1.9.0\tools\codecov -f ".\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml" -t "%ZOMBIFYME_CODECOV_TOKEN%"

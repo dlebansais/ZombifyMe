@@ -33,31 +33,38 @@
             string ProcessArguments = args[2];
             string ClientName = args[3];
 
-            // Open the cancel event. This event uses two unique names, one for the ZombifyMe, the other from the client.
-            using EventWaitHandle? CancelEvent = EventWaitHandle.OpenExisting(SharedDefinitions.GetCancelEventName(ClientName));
-            if (CancelEvent == null)
+            try
+            {
+                // Open the cancel event. This event uses two unique names, one for the ZombifyMe, the other from the client.
+                using EventWaitHandle? CancelEvent = EventWaitHandle.OpenExisting(SharedDefinitions.GetCancelEventName(ClientName));
+                if (CancelEvent == null)
+                    return -3;
+
+                // Read the delay, in ticks.
+                if (!long.TryParse(args[4], out long DelayTicks))
+                    return -4;
+
+                // Read messages. They can be empty.
+                string WatchingMessage = args[5];
+                string RestartMessage = args[6];
+
+                // Read the flags, as a set of bits.
+                if (!int.TryParse(args[7], out int FlagsValue))
+                    return -5;
+                Flags Flags = (Flags)FlagsValue;
+
+                // Display the begin message if requested.
+                if (WatchingMessage.Length > 0)
+                    TaskbarBalloon.Show(WatchingMessage);
+
+                MonitorProcess(ProcessId, ProcessExePath, ProcessArguments, CancelEvent, TimeSpan.FromTicks(DelayTicks), RestartMessage, Flags, out bool IsRestarted);
+
+                return IsRestarted ? 1 : 0;
+            }
+            catch
+            {
                 return -3;
-
-            // Read the delay, in ticks.
-            if (!long.TryParse(args[4], out long DelayTicks))
-                return -4;
-
-            // Read messages. They can be empty.
-            string WatchingMessage = args[5];
-            string RestartMessage = args[6];
-
-            // Read the flags, as a set of bits.
-            if (!int.TryParse(args[7], out int FlagsValue))
-                return -5;
-            Flags Flags = (Flags)FlagsValue;
-
-            // Display the begin message if requested.
-            if (WatchingMessage.Length > 0)
-                TaskbarBalloon.Show(WatchingMessage);
-
-            MonitorProcess(ProcessId, ProcessExePath, ProcessArguments, CancelEvent, TimeSpan.FromTicks(DelayTicks), RestartMessage, Flags, out bool IsRestarted);
-
-            return IsRestarted ? 1 : 0;
+            }
         }
 
         private static EventWaitHandle? OpenCancelEvent(string cancelEventName, out bool isOpened)
