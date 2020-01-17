@@ -28,6 +28,7 @@ namespace TestZombifyMe
             bool IsCoverageNoForward = args.Length > 0 && args[0] == "coverageNoForward";
             bool IsCoverageBadFolder = args.Length > 0 && args[0] == "coverageBadFolder";
             bool IsCoverageNotSymetric = args.Length > 0 && args[0] == "coverageNotSymetric";
+            bool IsCoverageFailSymetric = args.Length > 0 && args[0] == "coverageFailSymetric";
             bool IsCoverageFailLaunch = args.Length > 0 && args[0] == "coverageFailLaunch";
             bool IsCoverageNoKeepAlive = args.Length > 0 && args[0] == "coverageNoKeepAlive";
             bool IsManual = args.Length > 0 && args[0] == "manual";
@@ -42,6 +43,8 @@ namespace TestZombifyMe
 
             if (IsCoverageFailLaunch)
                 Zombification.Delay = TimeSpan.MinValue;
+            else if (IsCoverageFailSymetric)
+                Zombification.Delay = TimeSpan.MaxValue;
             else
                 Zombification.Delay = TimeSpan.FromSeconds(5);
 

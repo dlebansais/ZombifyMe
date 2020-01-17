@@ -6,6 +6,12 @@ if not exist ".\ZombifyMe\bin\x64\Debug\ZombifyMe.dll" goto error3
 
 if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml del .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml
 
+call .\coverage\app-monitor.bat ZombifyMe Debug 0
+call .\coverage\wait.bat 5
+
+call .\coverage\app-monitor.bat ZombifyMe Debug "! .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe manual Coverage 10 watching Restart 0"
+call .\coverage\wait.bat 5
+
 call .\coverage\app.bat ZombifyMe Debug coverageCancel
 call .\coverage\wait.bat 60
 
@@ -19,6 +25,9 @@ call .\coverage\app.bat ZombifyMe Debug coverageBadFolder
 call .\coverage\wait.bat 60
 
 call .\coverage\app.bat ZombifyMe Debug coverageNotSymetric
+call .\coverage\wait.bat 60
+
+call .\coverage\app.bat ZombifyMe Debug coverageFailSymetric
 call .\coverage\wait.bat 60
 
 call .\coverage\app.bat ZombifyMe Debug coverageFailLaunch
