@@ -24,6 +24,7 @@ namespace TestZombifyMe
 
         private static void Main(string[] args)
         {
+            bool IsMonitor = args.Length > 0 && args[0] == "monitor";
             bool IsCoverageCancel = args.Length > 0 && args[0] == "coverageCancel";
             bool IsCoverageNoForward = args.Length > 0 && args[0] == "coverageNoForward";
             bool IsCoverageBadFolder = args.Length > 0 && args[0] == "coverageBadFolder";
@@ -38,6 +39,13 @@ namespace TestZombifyMe
                 Message += ", " + Arg;
 
             ShowDialog(IsManual, IsCoverageCancel, Message, MessageBoxButtons.OK);
+
+            if (IsMonitor)
+            {
+                using EventWaitHandle CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, SharedDefinitions.GetCancelEventName("test"));
+                Thread.Sleep(5000);
+                return;
+            }
 
             Zombification Zombification = new Zombification("test");
 
