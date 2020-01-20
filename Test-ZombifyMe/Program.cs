@@ -42,7 +42,7 @@ namespace TestZombifyMe
 
             if (IsMonitor)
             {
-                using EventWaitHandle CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, SharedDefinitions.GetCancelEventName("test"));
+                using EventWaitHandle CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, SharedDefinitions.GetCancelEventName("Coverage"));
                 Thread.Sleep(5000);
                 return;
             }

@@ -1,4 +1,6 @@
-﻿namespace ZombifyMe
+﻿using System.Windows.Forms;
+
+namespace ZombifyMe
 {
     using System;
     using System.Diagnostics;
@@ -35,9 +37,6 @@
 
             try
             {
-                if (ClientName == "test")
-                    ClientName = "test";
-
                 // Open the cancel event. This event uses two unique names, one for the ZombifyMe, the other from the client.
                 using EventWaitHandle? CancelEvent = EventWaitHandle.OpenExisting(SharedDefinitions.GetCancelEventName(ClientName));
 
