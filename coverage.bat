@@ -7,19 +7,19 @@ if not exist ".\ZombifyMe\bin\x64\Debug\ZombifyMe.dll" goto error3
 if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml del .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml
 
 call .\coverage\app-monitor.bat ZombifyMe Debug 0
-call .\coverage\wait.bat 5
+call .\coverage\wait.bat 10
 
 call .\coverage\app-monitor.bat ZombifyMe Debug "! .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart 0"
-call .\coverage\wait.bat 5
+call .\coverage\wait.bat 10
 
 call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage ! watching Restart 0"
-call .\coverage\wait.bat 5
+call .\coverage\wait.bat 10
 
 call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart !"
-call .\coverage\wait.bat 5
+call .\coverage\wait.bat 10
 
 call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart 0"
-call .\coverage\wait.bat 5
+call .\coverage\wait.bat 10
 goto skip
 
 call .\coverage\app.bat ZombifyMe Debug coverageCancel

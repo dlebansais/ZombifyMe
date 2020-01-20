@@ -94,9 +94,9 @@ namespace TestZombifyMe
             }
         }
 
-        private static DialogResult ShowDialog(bool IsManual, bool isCoverageCancel, string text, MessageBoxButtons buttons)
+        private static DialogResult ShowDialog(bool isManual, bool isCoverageCancel, string text, MessageBoxButtons buttons)
         {
-            if (IsManual)
+            if (isManual)
                 return MessageBox.Show(text, "", buttons);
             else if (isCoverageCancel)
                 return DialogResult.Cancel;

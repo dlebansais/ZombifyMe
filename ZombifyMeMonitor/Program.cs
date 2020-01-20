@@ -37,8 +37,6 @@
             {
                 // Open the cancel event. This event uses two unique names, one for the ZombifyMe, the other from the client.
                 using EventWaitHandle? CancelEvent = EventWaitHandle.OpenExisting(SharedDefinitions.GetCancelEventName(ClientName));
-                if (CancelEvent == null)
-                    return -3;
 
                 // Read the delay, in ticks.
                 if (!long.TryParse(args[4], out long DelayTicks))
@@ -65,14 +63,6 @@
             {
                 return -3;
             }
-        }
-
-        private static EventWaitHandle? OpenCancelEvent(string cancelEventName, out bool isOpened)
-        {
-            EventWaitHandle CancelEvent = EventWaitHandle.OpenExisting(cancelEventName);
-            isOpened = CancelEvent != null;
-
-            return CancelEvent;
         }
 
         /// <summary>
