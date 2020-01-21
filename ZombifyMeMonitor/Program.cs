@@ -1,11 +1,10 @@
-﻿using System.Windows.Forms;
-
-namespace ZombifyMe
+﻿namespace ZombifyMe
 {
     using System;
     using System.Diagnostics;
     using System.IO;
     using System.Threading;
+    using System.Windows.Forms;
     using TaskbarTools;
 
     /// <summary>
@@ -50,10 +49,7 @@ namespace ZombifyMe
 
                 // Read the flags, as a set of bits.
                 if (!int.TryParse(args[7], out int FlagsValue))
-                {
-                    MessageBox.Show(args[7]);
                     return -5;
-                }
                 Flags Flags = (Flags)FlagsValue;
 
                 // Display the begin message if requested.

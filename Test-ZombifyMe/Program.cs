@@ -42,6 +42,7 @@ namespace TestZombifyMe
 
             if (IsMonitor)
             {
+                Console.WriteLine("test\r\n");
                 using EventWaitHandle CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, SharedDefinitions.GetCancelEventName("Coverage"));
                 Thread.Sleep(5000);
                 return;

@@ -5,17 +5,21 @@ if not exist ".\packages\Codecov.1.9.0\tools\codecov.exe" goto error2
 if not exist ".\ZombifyMe\bin\x64\Debug\ZombifyMe.dll" goto error3
 
 if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml del .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml
+if exist result.txt del result.txt
 
 call .\coverage\app-monitor.bat ZombifyMe Debug 0
-call .\coverage\wait.bat 10
-
-call .\coverage\app-monitor.bat ZombifyMe Debug "! .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel NotCoverage 0 watching Restart 0"
 call .\coverage\wait.bat 10
 
 call .\coverage\app-monitor.bat ZombifyMe Debug "! .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart 0"
 call .\coverage\wait.bat 10
 
+call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel NotCoverage 0 watching Restart 0"
+call .\coverage\wait.bat 10
+
 call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage ! watching Restart 0"
+call .\coverage\wait.bat 10
+
+call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 \"\" Restart !"
 call .\coverage\wait.bat 10
 
 call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart !"
