@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Windows.Forms;
 using ZombifyMe;
@@ -42,7 +43,7 @@ namespace TestZombifyMe
 
             if (IsMonitor)
             {
-                Console.WriteLine("test\r\n");
+                Console.WriteLine($"set TESTZOMBIFY_PROCESSID={Process.GetCurrentProcess().Id}\r\n");
                 using EventWaitHandle CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, SharedDefinitions.GetCancelEventName("Coverage"));
                 Thread.Sleep(5000);
                 return;
