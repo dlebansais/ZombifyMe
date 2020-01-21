@@ -50,7 +50,10 @@ namespace ZombifyMe
 
                 // Read the flags, as a set of bits.
                 if (!int.TryParse(args[7], out int FlagsValue))
+                {
+                    MessageBox.Show(args[7]);
                     return -5;
+                }
                 Flags Flags = (Flags)FlagsValue;
 
                 // Display the begin message if requested.

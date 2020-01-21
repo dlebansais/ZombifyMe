@@ -9,6 +9,9 @@ if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml del .\Test-Z
 call .\coverage\app-monitor.bat ZombifyMe Debug 0
 call .\coverage\wait.bat 10
 
+call .\coverage\app-monitor.bat ZombifyMe Debug "! .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel NotCoverage 0 watching Restart 0"
+call .\coverage\wait.bat 10
+
 call .\coverage\app-monitor.bat ZombifyMe Debug "! .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart 0"
 call .\coverage\wait.bat 10
 
@@ -49,7 +52,7 @@ call .\coverage\wait.bat 60
 :skip
 
 call ..\Certification\set_tokens.bat
-rem if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml .\packages\Codecov.1.9.0\tools\codecov -f ".\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml" -t "%ZOMBIFYME_CODECOV_TOKEN%"
+if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml .\packages\Codecov.1.9.0\tools\codecov -f ".\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml" -t "%ZOMBIFYME_CODECOV_TOKEN%"
 goto end
 
 :error1
