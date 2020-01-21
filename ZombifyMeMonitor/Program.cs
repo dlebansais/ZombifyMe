@@ -83,7 +83,9 @@ namespace ZombifyMe
         /// <param name="isRestarted">True upon return if the process crashed and was restarted.</param>
         private static void MonitorProcess(int processId, string processExePath, string processArguments, EventWaitHandle cancelEvent, TimeSpan delay, string restartMessage, Flags flags, out bool isRestarted)
         {
-            while (true)
+            isRestarted = false;
+
+            while (processId != 0)
             {
                 if (cancelEvent.WaitOne(SharedDefinitions.CheckInterval))
                 {
@@ -102,7 +104,7 @@ namespace ZombifyMe
                 catch
                 {
                     isRestarted = RestartProcess(processExePath, processArguments, delay, restartMessage, flags);
-                    break;
+                    processId = 0;
                 }
             }
         }
