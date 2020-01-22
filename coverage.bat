@@ -5,7 +5,6 @@ if not exist ".\packages\Codecov.1.9.0\tools\codecov.exe" goto error2
 if not exist ".\ZombifyMe\bin\x64\Debug\ZombifyMe.dll" goto error3
 
 if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml del .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml
-if exist set_process_id.bat del set_process_id.bat
 
 call .\coverage\app-monitor.bat ZombifyMe Debug 0
 call .\coverage\wait.bat 20
@@ -61,6 +60,7 @@ call .\coverage\wait.bat 60
 
 :skip
 
+if exist set_process_id.bat del set_process_id.bat
 call ..\Certification\set_tokens.bat
 if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml .\packages\Codecov.1.9.0\tools\codecov -f ".\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml" -t "%ZOMBIFYME_CODECOV_TOKEN%"
 goto end
