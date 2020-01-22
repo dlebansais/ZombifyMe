@@ -141,9 +141,13 @@
             try
             {
                 Result = Process.Start(StartInfo) != null;
+                Result &= restartMessage.Length > 0;
 
-                if (Result && restartMessage.Length > 0)
+                if (Result)
                     TaskbarBalloon.Show(restartMessage, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(1));
+                else
+                {
+                }
             }
             catch (Exception e)
             {
