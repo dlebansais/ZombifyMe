@@ -97,8 +97,10 @@
                         Thread.Yield();
                     }
                 }
-                catch
+                catch (Exception e)
                 {
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine(e.StackTrace);
                     isRestarted = RestartProcess(processExePath, processArguments, delay, restartMessage, flags);
                     processId = 0;
                 }
