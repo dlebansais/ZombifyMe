@@ -43,16 +43,19 @@ namespace TestZombifyMe
 
             if (IsMonitor)
             {
-                bool IsMonitorcancel = args.Length > 1 && args[1] == "cancel";
+                bool IsMonitorCancel = args.Length > 1 && args[1] == "cancel";
+                bool IsMonitorWait = args.Length > 1 && args[1] == "cancel";
 
                 Console.WriteLine($"set TESTZOMBIFY_PROCESSID={Process.GetCurrentProcess().Id}\r\n");
                 using EventWaitHandle CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, SharedDefinitions.GetCancelEventName("Coverage"));
                 Thread.Sleep(TimeSpan.FromSeconds(5));
-                if (IsMonitorcancel)
+                if (IsMonitorCancel)
                 {
                     CancelEvent.Set();
                     Thread.Sleep(TimeSpan.FromSeconds(5));
                 }
+                if (IsMonitorWait)
+                    Thread.Sleep(TimeSpan.FromSeconds(5));
                 return;
             }
 
