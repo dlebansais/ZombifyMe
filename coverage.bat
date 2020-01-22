@@ -27,7 +27,7 @@ call .\coverage\wait.bat 20
 call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 \"\" Restart 0"
 call .\coverage\wait.bat 20
 
-call .\coverage\app-monitor-with-id.bat ZombifyMe Debug ".\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart 0" "monitor"
+call .\coverage\app-monitor-with-id.bat ZombifyMe Debug ".\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 \"\" Restart 0" "monitor"
 call .\coverage\wait.bat 20
 
 call .\coverage\app-monitor-with-id.bat ZombifyMe Debug ".\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart 0" "monitor cancel"
@@ -36,7 +36,7 @@ call .\coverage\wait.bat 25
 call .\coverage\app-monitor-with-id.bat ZombifyMe Debug ".\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 1 watching Restart 1" "monitor cancel"
 call .\coverage\wait.bat 25
 
-call .\coverage\app-monitor-with-id.bat ZombifyMe Debug ".\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 1 watching Restart 1" "monitor wait"
+call .\coverage\app-monitor-with-id.bat ZombifyMe Debug ".\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 1 \"\" Restart 1" "monitor wait"
 call .\coverage\wait.bat 25
 goto skip
 

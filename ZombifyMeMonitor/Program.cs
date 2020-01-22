@@ -100,6 +100,7 @@
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
+                    Console.WriteLine(processId.ToString());
                     Console.WriteLine(e.StackTrace);
                     isRestarted = RestartProcess(processExePath, processArguments, delay, restartMessage, flags);
                     processId = 0;
@@ -147,6 +148,7 @@
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                Console.WriteLine(processExePath);
                 Console.WriteLine(e.StackTrace);
                 Result = false;
             }
