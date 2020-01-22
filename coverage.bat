@@ -8,31 +8,31 @@ if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml del .\Test-Z
 if exist set_process_id.bat del set_process_id.bat
 
 call .\coverage\app-monitor.bat ZombifyMe Debug 0
-call .\coverage\wait.bat 10
+call .\coverage\wait.bat 20
 
 call .\coverage\app-monitor.bat ZombifyMe Debug "! .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart 0"
-call .\coverage\wait.bat 10
+call .\coverage\wait.bat 20
 
 call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel NotCoverage 0 watching Restart 0"
-call .\coverage\wait.bat 10
+call .\coverage\wait.bat 20
 
 call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage ! watching Restart 0"
-call .\coverage\wait.bat 10
+call .\coverage\wait.bat 20
 
 call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart !"
-call .\coverage\wait.bat 10
+call .\coverage\wait.bat 20
 
 call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart 0"
-call .\coverage\wait.bat 10
+call .\coverage\wait.bat 20
 
 call .\coverage\app-monitor.bat ZombifyMe Debug "0 .\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 \"\" Restart 0"
-call .\coverage\wait.bat 10
+call .\coverage\wait.bat 20
 
 call .\coverage\app-monitor-with-id.bat ZombifyMe Debug ".\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart 0" "monitor"
-call .\coverage\wait.bat 10
+call .\coverage\wait.bat 20
 
 call .\coverage\app-monitor-with-id.bat ZombifyMe Debug ".\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 0 watching Restart 0" "monitor cancel"
-call .\coverage\wait.bat 10
+call .\coverage\wait.bat 25
 goto skip
 
 call .\coverage\app.bat ZombifyMe Debug coverageCancel

@@ -47,11 +47,11 @@ namespace TestZombifyMe
 
                 Console.WriteLine($"set TESTZOMBIFY_PROCESSID={Process.GetCurrentProcess().Id}\r\n");
                 using EventWaitHandle CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, SharedDefinitions.GetCancelEventName("Coverage"));
-                Thread.Sleep(5000);
+                Thread.Sleep(TimeSpan.FromSeconds(5));
                 if (IsMonitorcancel)
                 {
                     CancelEvent.Set();
-                    Thread.Sleep(1000);
+                    Thread.Sleep(TimeSpan.FromSeconds(5));
                 }
                 return;
             }

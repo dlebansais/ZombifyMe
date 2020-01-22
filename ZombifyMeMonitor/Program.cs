@@ -54,7 +54,7 @@
 
                 // Display the begin message if requested.
                 if (WatchingMessage.Length > 0)
-                    TaskbarBalloon.Show(WatchingMessage);
+                    TaskbarBalloon.Show(WatchingMessage, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(1));
 
                 MonitorProcess(ProcessId, ProcessExePath, ProcessArguments, CancelEvent, TimeSpan.FromTicks(DelayTicks), RestartMessage, Flags, out bool IsRestarted);
 
@@ -140,7 +140,7 @@
                 Result = Process.Start(StartInfo) != null;
 
                 if (Result && restartMessage.Length > 0)
-                    TaskbarBalloon.Show(restartMessage);
+                    TaskbarBalloon.Show(restartMessage, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(1));
             }
             catch
             {

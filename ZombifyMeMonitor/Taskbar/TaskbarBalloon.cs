@@ -1,5 +1,6 @@
 ﻿namespace TaskbarTools
 {
+    using System;
     using System.Drawing;
     using System.Threading;
     using System.Windows.Forms;
@@ -14,15 +15,16 @@
         /// Display a notification in a taskbar balloon.
         /// </summary>
         /// <param name="text">The text to show.</param>
-        /// <param name="delay">The delay, in milliseconds.</param>
-        public static void Show(string text, short delay = 5000)
+        /// <param name="delayShow">The delay showing the balloon.</param>
+        /// <param name="delayWait">The delay waiting synchronously to ensure the balloon is entirely visible upon return.</param>
+        public static void Show(string text, TimeSpan delayShow, TimeSpan delayWait)
         {
             try
             {
                 using (NotifyIcon notification = new NotifyIcon() { Visible = true, Icon = SystemIcons.Shield, Text = text, BalloonTipText = text })
                 {
-                    notification.ShowBalloonTip(delay);
-                    Thread.Sleep(delay);
+                    notification.ShowBalloonTip((int)delayShow.TotalMilliseconds);
+                    Thread.Sleep(delayWait);
                 }
             }
             catch
