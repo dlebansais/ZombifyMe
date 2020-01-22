@@ -142,8 +142,10 @@
                 if (Result && restartMessage.Length > 0)
                     TaskbarBalloon.Show(restartMessage, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(1));
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
+                Console.WriteLine(e.StackTrace);
                 Result = false;
             }
 

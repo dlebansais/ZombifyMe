@@ -12,4 +12,3 @@ echo Id: %TESTZOMBIFY_PROCESSID%
 start "ZombifyMeMonitor" /B ".\packages\OpenCover.4.7.922\tools\OpenCover.Console.exe" -register:Path64 -target:".\ZombifyMeMonitor\bin\x64\%2\ZombifyMeMonitor.exe" -targetargs:"%TESTZOMBIFY_PROCESSID% %~3" -output:".\Test-%1\obj\x64\%2\Coverage-%2_coverage.xml" %MERGE%
 set MERGE=
 set TESTZOMBIFY_PROCESSID=
-del set_process_id.bat
