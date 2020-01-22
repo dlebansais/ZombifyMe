@@ -97,11 +97,8 @@
                         Thread.Yield();
                     }
                 }
-                catch (Exception e)
+                catch
                 {
-                    Console.WriteLine(e.Message);
-                    Console.WriteLine(processId.ToString());
-                    Console.WriteLine(e.StackTrace);
                     isRestarted = RestartProcess(processExePath, processArguments, delay, restartMessage, flags);
                     processId = 0;
                 }
@@ -145,15 +142,9 @@
 
                 if (Result)
                     TaskbarBalloon.Show(restartMessage, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(1));
-                else
-                {
-                }
             }
-            catch (Exception e)
+            catch
             {
-                Console.WriteLine(e.Message);
-                Console.WriteLine(processExePath);
-                Console.WriteLine(e.StackTrace);
                 Result = false;
             }
 

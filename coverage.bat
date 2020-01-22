@@ -41,7 +41,6 @@ call .\coverage\wait.bat 25
 
 call .\coverage\app-monitor-with-id.bat ZombifyMe Debug ".\Test-ZombifyMe\obj\x64\Debug\Test-ZombifyMe.exe coverageCancel Coverage 1 \"\" \"\" 1" "monitor wait"
 call .\coverage\wait.bat 25
-goto skip
 
 call .\coverage\app.bat ZombifyMe Debug coverageCancel
 call .\coverage\wait.bat 60
@@ -66,8 +65,6 @@ call .\coverage\wait.bat 60
 
 call .\coverage\app.bat ZombifyMe Debug coverageNoKeepAlive
 call .\coverage\wait.bat 60
-
-:skip
 
 if exist set_process_id.bat del set_process_id.bat
 call ..\Certification\set_tokens.bat
