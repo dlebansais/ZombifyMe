@@ -43,6 +43,10 @@
                 if (!long.TryParse(args[4], out long DelayTicks))
                     return -4;
 
+                TimeSpan Delay = TimeSpan.FromTicks(DelayTicks);
+                if (Delay == TimeSpan.MaxValue)
+                    return -4;
+
                 // Read messages. They can be empty.
                 string WatchingMessage = args[5];
                 string RestartMessage = args[6];
@@ -56,7 +60,7 @@
                 if (WatchingMessage.Length > 0)
                     TaskbarBalloon.Show(WatchingMessage, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(1));
 
-                MonitorProcess(ProcessId, ProcessExePath, ProcessArguments, CancelEvent, TimeSpan.FromTicks(DelayTicks), RestartMessage, Flags, out bool IsRestarted);
+                MonitorProcess(ProcessId, ProcessExePath, ProcessArguments, CancelEvent, Delay, RestartMessage, Flags, out bool IsRestarted);
 
                 return IsRestarted ? 1 : 0;
             }
