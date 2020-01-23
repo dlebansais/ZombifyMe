@@ -33,6 +33,7 @@ namespace TestZombifyMe
             bool IsCoverageFailSymetric = args.Length > 0 && args[0] == "coverageFailSymetric";
             bool IsCoverageFailLaunch = args.Length > 0 && args[0] == "coverageFailLaunch";
             bool IsCoverageNoKeepAlive = args.Length > 0 && args[0] == "coverageNoKeepAlive";
+            bool IsCoverageNoAliveTimeout = args.Length > 0 && args[0] == "coverageNoAliveTimeout";
             bool IsManual = args.Length > 0 && args[0] == "manual";
 
             string Message = $"IsRestart: {IsRestart}, Arguments: {args.Length}";
@@ -74,7 +75,11 @@ namespace TestZombifyMe
                 Zombification.Flags = Flags.ForwardArguments | Flags.NoWindow;
 
             Zombification.IsSymetric = !IsCoverageNotSymetric;
-            Zombification.AliveTimeout = TimeSpan.FromSeconds(10);
+
+            if (IsCoverageNoAliveTimeout)
+                Zombification.AliveTimeout = TimeSpan.Zero;
+            else
+                Zombification.AliveTimeout = TimeSpan.FromSeconds(10);
 
             if (IsCoverageBadFolder)
                 Zombification.MonitorFolder = "*";

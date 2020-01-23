@@ -44,7 +44,7 @@
                     return -4;
 
                 TimeSpan Delay = TimeSpan.FromTicks(DelayTicks);
-                if (Delay == TimeSpan.MaxValue)
+                if (Delay == TimeSpan.MaxValue || DelayTicks < 0)
                     return -4;
 
                 // Read messages. They can be empty.
