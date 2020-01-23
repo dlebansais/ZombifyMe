@@ -275,7 +275,8 @@
                     }
 
                     // Wait the same delay as if restarting the original process.
-                    Thread.Sleep(monitoring.Delay);
+                    if (monitoring.Delay != TimeSpan.MaxValue)
+                        Thread.Sleep(monitoring.Delay);
 
                     ZombifyMeInternal(monitoring, out Errors Error);
                 }
