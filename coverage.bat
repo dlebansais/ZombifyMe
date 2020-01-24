@@ -66,8 +66,8 @@ call .\coverage\wait.bat 60
 call .\coverage\app.bat ZombifyMe Debug coverageNoKeepAlive
 call .\coverage\wait.bat 60
 
-rem call .\coverage\app.bat ZombifyMe Debug coverageNoAliveTimeout
-rem call .\coverage\wait.bat 60
+call .\coverage\app.bat ZombifyMe Debug coverageNoAliveTimeout
+call .\coverage\wait.bat 60
 
 if exist set_process_id.bat del set_process_id.bat
 call ..\Certification\set_tokens.bat

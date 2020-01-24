@@ -169,7 +169,7 @@
             {
                 monitoring.MonitorProcess = MonitorProcess;
 
-                if (monitoring.IsSymetric)
+                if (monitoring.IsSymetric && monitoring.AliveTimeout > TimeSpan.Zero)
                     StartSymetricWatch(monitoring);
             }
 
@@ -239,6 +239,7 @@
         private static void ExecuteSymetricWatch(Monitoring monitoring, Process monitorProcess, EventWaitHandle cancelEvent)
         {
             TimeSpan AliveTimeout = monitoring.AliveTimeout;
+            Debug.Assert(AliveTimeout > TimeSpan.Zero);
 
             bool IsAlive = true;
             AliveWatch.Start();
@@ -250,7 +251,7 @@
                 if (!IsAlive)
                     Exit = true;
 
-                if (AliveTimeout != TimeSpan.Zero && AliveWatch.Elapsed >= AliveTimeout)
+                if (AliveWatch.Elapsed >= AliveTimeout)
                     Exit = true;
 
                 if (Exit)
