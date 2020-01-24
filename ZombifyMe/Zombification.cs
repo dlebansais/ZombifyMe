@@ -269,8 +269,7 @@
                     }
 
                     // Wait the same delay as if restarting the original process.
-                    if (monitoring.Delay != TimeSpan.MaxValue)
-                        Thread.Sleep(monitoring.Delay);
+                    Thread.Sleep(monitoring.Delay);
 
                     ZombifyMeInternal(monitoring, out Errors Error);
                 }
@@ -295,10 +294,9 @@
 
             Assembly CurrentAssembly = Assembly.GetExecutingAssembly();
             string[] ResourceNames = CurrentAssembly.GetManifestResourceNames();
-            foreach (string Item in ResourceNames)
-                if (Item.EndsWith(".exe", StringComparison.InvariantCulture))
-                    ResourceName = Item;
+            Debug.Assert(ResourceNames.Length == 1);
 
+            ResourceName = ResourceNames[0];
             Debug.Assert(ResourceName.Length > 0);
 
             using (Stream ResourceStream = CurrentAssembly.GetManifestResourceStream(ResourceName))
