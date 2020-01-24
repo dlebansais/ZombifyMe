@@ -257,17 +257,10 @@
                 if (Exit)
                     break;
 
-                try
-                {
-                    if (cancelEvent.WaitOne(SharedDefinitions.CheckInterval))
-                        break;
+                if (cancelEvent.WaitOne(SharedDefinitions.CheckInterval))
+                    break;
 
-                    IsAlive = !monitorProcess.HasExited;
-                }
-                catch
-                {
-                    IsAlive = false;
-                }
+                IsAlive = !monitorProcess.HasExited;
 
                 if (!IsAlive)
                 {

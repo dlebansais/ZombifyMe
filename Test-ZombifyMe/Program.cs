@@ -64,13 +64,13 @@ namespace TestZombifyMe
 
             if (IsCoverageFailLaunch)
                 Zombification.Delay = TimeSpan.MinValue;
-            else if (IsCoverageFailSymetric)
-                Zombification.Delay = TimeSpan.MaxValue;
             else
                 Zombification.Delay = TimeSpan.FromSeconds(5);
 
             if (IsCoverageNoForward)
                 Zombification.Flags = Flags.NoWindow;
+            else if (IsCoverageFailSymetric)
+                Zombification.Flags = (Flags)(-1);
             else
                 Zombification.Flags = Flags.ForwardArguments | Flags.NoWindow;
 
