@@ -60,10 +60,10 @@ call .\coverage\wait.bat 60
 call .\coverage\app.bat ZombifyMe Debug coverageBadFolder
 call .\coverage\wait.bat 60
 
-call .\coverage\app.bat ZombifyMe Debug coverageNotSymetric
+call .\coverage\app.bat ZombifyMe Debug coverageNotSymmetric
 call .\coverage\wait.bat 60
 
-call .\coverage\app.bat ZombifyMe Debug coverageFailSymetric
+call .\coverage\app.bat ZombifyMe Debug coverageFailSymmetric
 call .\coverage\wait.bat 60
 
 call .\coverage\app.bat ZombifyMe Debug coverageFailLaunch
