@@ -1,5 +1,7 @@
 # Zombify Me
 [![Build Status](https://travis-ci.com/dlebansais/ZombifyMe.svg?branch=master)](https://travis-ci.com/dlebansais/ZombifyMe)
+[![CodeFactor](https://www.codefactor.io/repository/github/dlebansais/zombifyme/badge)](https://www.codefactor.io/repository/github/dlebansais/zombifyme)
+[![codecov](https://codecov.io/gh/dlebansais/ZombifyMe/branch/master/graph/badge.svg)](https://codecov.io/gh/dlebansais/ZombifyMe)
 
 A library that can restart the program it's linked with if it crashes unexpectedly.
 
