@@ -247,8 +247,14 @@
             bool IsAlive = true;
             AliveWatch.Start();
 
-            while (IsAlive && AliveWatch.Elapsed < AliveTimeout && !cancelEvent.WaitOne(SharedDefinitions.CheckInterval))
+            while (IsAlive)
             {
+                if (AliveWatch.Elapsed >= AliveTimeout)
+                    break;
+
+                if (cancelEvent.WaitOne(SharedDefinitions.CheckInterval))
+                    break;
+
                 IsAlive = !monitorProcess.HasExited;
 
                 if (!IsAlive)
