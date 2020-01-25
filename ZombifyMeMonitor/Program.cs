@@ -1,11 +1,11 @@
-﻿namespace ZombifyMe
+﻿namespace ZombifyMeMonitor
 {
     using System;
     using System.Diagnostics;
     using System.IO;
     using System.Threading;
-    using System.Windows.Forms;
     using TaskbarTools;
+    using ZombifyMe;
 
     /// <summary>
     /// The main class for this program.
@@ -97,7 +97,7 @@
 
                 try
                 {
-                    using (Process MonitoredProcess = Process.GetProcessById(processId))
+                    using (Process.GetProcessById(processId))
                     {
                         // Not necessary if CheckInterval is not zero, but let's be a good citizen.
                         Thread.Yield();
@@ -125,10 +125,12 @@
             if (delay.TotalSeconds > 0)
                 Thread.Sleep(delay);
 
-            ProcessStartInfo StartInfo = new ProcessStartInfo();
-            StartInfo.FileName = processExePath;
-            StartInfo.Arguments = processArguments;
-            StartInfo.WorkingDirectory = Path.GetDirectoryName(processExePath);
+            ProcessStartInfo StartInfo = new ProcessStartInfo
+            {
+                FileName = processExePath,
+                Arguments = processArguments,
+                WorkingDirectory = Path.GetDirectoryName(processExePath),
+            };
 
             if (flags.HasFlag(Flags.NoWindow))
             {

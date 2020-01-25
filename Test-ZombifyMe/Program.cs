@@ -29,8 +29,8 @@ namespace TestZombifyMe
             bool IsCoverageCancel = args.Length > 0 && args[0] == "coverageCancel";
             bool IsCoverageNoForward = args.Length > 0 && args[0] == "coverageNoForward";
             bool IsCoverageBadFolder = args.Length > 0 && args[0] == "coverageBadFolder";
-            bool IsCoverageNotSymetric = args.Length > 0 && args[0] == "coverageNotSymetric";
-            bool IsCoverageFailSymetric = args.Length > 0 && args[0] == "coverageFailSymetric";
+            bool IsCoverageNotSymmetric = args.Length > 0 && args[0] == "coverageNotSymmetric";
+            bool IsCoverageFailSymmetric = args.Length > 0 && args[0] == "coverageFailSymmetric";
             bool IsCoverageFailLaunch = args.Length > 0 && args[0] == "coverageFailLaunch";
             bool IsCoverageNoKeepAlive = args.Length > 0 && args[0] == "coverageNoKeepAlive";
             bool IsCoverageNoAliveTimeout = args.Length > 0 && args[0] == "coverageNoAliveTimeout";
@@ -47,7 +47,7 @@ namespace TestZombifyMe
                 bool IsMonitorCancel = args.Length > 1 && args[1] == "cancel";
                 bool IsMonitorWait = args.Length > 1 && args[1] == "cancel";
 
-                Console.WriteLine($"set TESTZOMBIFY_PROCESSID={Process.GetCurrentProcess().Id}\r\n");
+                Console.WriteLine($"set TEST_ZOMBIFY_PROCESS_ID={Process.GetCurrentProcess().Id}\r\n");
                 using EventWaitHandle CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, SharedDefinitions.GetCancelEventName("Coverage"));
                 Thread.Sleep(TimeSpan.FromSeconds(5));
                 if (IsMonitorCancel)
@@ -60,29 +60,14 @@ namespace TestZombifyMe
                 return;
             }
 
-            Zombification Zombification = new Zombification("test");
-
-            if (IsCoverageFailLaunch)
-                Zombification.Delay = TimeSpan.MinValue;
-            else
-                Zombification.Delay = TimeSpan.FromSeconds(5);
-
-            if (IsCoverageNoForward)
-                Zombification.Flags = Flags.NoWindow;
-            else if (IsCoverageFailSymetric)
-                Zombification.Flags = (Flags)(-1);
-            else
-                Zombification.Flags = Flags.ForwardArguments | Flags.NoWindow;
-
-            Zombification.IsSymetric = !IsCoverageNotSymetric;
-
-            if (IsCoverageNoAliveTimeout)
-                Zombification.AliveTimeout = TimeSpan.Zero;
-            else
-                Zombification.AliveTimeout = TimeSpan.FromSeconds(10);
-
-            if (IsCoverageBadFolder)
-                Zombification.MonitorFolder = "*";
+            Zombification Zombification = new Zombification("test")
+            {
+                Delay = IsCoverageFailLaunch ? TimeSpan.MinValue : TimeSpan.FromSeconds(5),
+                Flags = IsCoverageNoForward ? Flags.NoWindow : (IsCoverageFailSymmetric ? (Flags)(-1) : Flags.ForwardArguments | Flags.NoWindow),
+                IsSymmetric = !IsCoverageNotSymmetric,
+                AliveTimeout = IsCoverageNoAliveTimeout ? TimeSpan.Zero : TimeSpan.FromSeconds(10),
+                MonitorFolder = IsCoverageBadFolder ? "*" : string.Empty,
+            };
 
             Zombification.Cancel();
             Zombification.ZombifyMe();

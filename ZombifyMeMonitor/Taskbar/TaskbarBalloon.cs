@@ -19,11 +19,9 @@
         /// <param name="delayWait">The delay waiting synchronously to ensure the balloon is entirely visible upon return.</param>
         public static void Show(string text, TimeSpan delayShow, TimeSpan delayWait)
         {
-            using (NotifyIcon notification = new NotifyIcon() { Visible = true, Icon = SystemIcons.Shield, Text = text, BalloonTipText = text })
-            {
-                notification.ShowBalloonTip((int)delayShow.TotalMilliseconds);
-                Thread.Sleep(delayWait);
-            }
+            using NotifyIcon Notification = new NotifyIcon() { Visible = true, Icon = SystemIcons.Shield, Text = text, BalloonTipText = text };
+            Notification.ShowBalloonTip((int)delayShow.TotalMilliseconds);
+            Thread.Sleep(delayWait);
         }
         #endregion
     }

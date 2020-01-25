@@ -66,7 +66,7 @@
         /// <summary>
         /// True if the main process should also watch on the monitoring process to restart it.
         /// </summary>
-        public bool IsSymetric { get; set; } = false;
+        public bool IsSymmetric { get; set; } = false;
 
         /// <summary>
         /// Gets and sets the timeout for the main thread to notify it's alive.
@@ -91,7 +91,7 @@
         /// <returns>True if successful; False otherwise and <see cref="LastError"/> contains the error.</returns>
         public bool ZombifyMe()
         {
-            Monitoring NewMonitoring = new Monitoring() { ClientName = ClientName, Delay = Delay, WatchingMessage = WatchingMessage, RestartMessage = RestartMessage, Flags = Flags, IsSymetric = IsSymetric, AliveTimeout = AliveTimeout, MonitorFolder = MonitorFolder };
+            Monitoring NewMonitoring = new Monitoring() { ClientName = ClientName, Delay = Delay, WatchingMessage = WatchingMessage, RestartMessage = RestartMessage, Flags = Flags, IsSymmetric = IsSymmetric, AliveTimeout = AliveTimeout, MonitorFolder = MonitorFolder };
             Debug.Assert(NewMonitoring.CancelEvent == null);
 
             bool Result = ZombifyMeInternal(NewMonitoring, out Errors Error);
@@ -121,9 +121,9 @@
             {
                 // Accumulate arguments in a single string.
                 string[] Args = Environment.GetCommandLineArgs();
-                for (int i = 1; i < Args.Length; i++)
+                for (int Index = 1; Index < Args.Length; Index++)
                 {
-                    string Arg = Args[i];
+                    string Arg = Args[Index];
                     if (ArgsText.Length > 0)
                         ArgsText += " ";
 
@@ -142,12 +142,17 @@
             // Start the monitoring process.
             // Don't dispose of it, it's passed to another thread.
 #pragma warning disable CA2000 // Dispose objects before losing scope
-            Process MonitorProcess = new Process();
+            Process MonitorProcess = new Process
+            {
+                StartInfo =
+                {
+                    FileName = MonitorProcessFileName,
+                    Arguments = $"{ProcessId} \"{ClientExePath}\" \"{ArgsText}\" \"{monitoring.ClientName}\" {DelayTicks} \"{monitoring.WatchingMessage}\" \"{monitoring.RestartMessage}\" {(int)monitoring.Flags}",
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                },
+            };
 #pragma warning restore CA2000 // Dispose objects before losing scope
-            MonitorProcess.StartInfo.FileName = MonitorProcessFileName;
-            MonitorProcess.StartInfo.Arguments = $"{ProcessId} \"{ClientExePath}\" \"{ArgsText}\" \"{monitoring.ClientName}\" {DelayTicks} \"{monitoring.WatchingMessage}\" \"{monitoring.RestartMessage}\" {(int)monitoring.Flags}";
-            MonitorProcess.StartInfo.UseShellExecute = false;
-            MonitorProcess.StartInfo.CreateNoWindow = true;
 
             bool Result;
 
@@ -169,8 +174,8 @@
             {
                 monitoring.MonitorProcess = MonitorProcess;
 
-                if (monitoring.IsSymetric && monitoring.AliveTimeout > TimeSpan.Zero)
-                    StartSymetricWatch(monitoring);
+                if (monitoring.IsSymmetric && monitoring.AliveTimeout > TimeSpan.Zero)
+                    StartSymmetricWatch(monitoring);
             }
 
             return Result;
@@ -183,11 +188,9 @@
         {
             if (CancelEvent != null)
             {
-                using (EventWaitHandle Handle = CancelEvent)
-                {
-                    CancelEvent = null;
-                    Handle.Set();
-                }
+                using EventWaitHandle Handle = CancelEvent;
+                CancelEvent = null;
+                Handle.Set();
             }
         }
 
@@ -200,14 +203,14 @@
         }
         #endregion
 
-        #region Symetric Watch Thread
+        #region Symmetric Watch Thread
         /// <summary>
         /// Starts a thread to ensure the monitoring process is restarted if it crashed.
         /// </summary>
         /// <param name="monitoring">Monitoring parameters.</param>
-        private static void StartSymetricWatch(Monitoring monitoring)
+        private static void StartSymmetricWatch(Monitoring monitoring)
         {
-            Thread NewThread = new Thread(new ParameterizedThreadStart(ExecuteSymetricWatch));
+            Thread NewThread = new Thread(ExecuteSymmetricWatch);
             NewThread.Start(monitoring);
         }
 
@@ -215,7 +218,7 @@
         /// Ensures the monitoring process is restarted if it crashed.
         /// </summary>
         /// <param name="parameter">The monitoring process.</param>
-        private static void ExecuteSymetricWatch(object parameter)
+        private static void ExecuteSymmetricWatch(object parameter)
         {
             // Wait a bit to ensure the new process is started.
             // A proper synchronization would be preferable, but at this point I'm too lazy.
@@ -226,7 +229,7 @@
             Debug.Assert(Monitoring.CancelEvent != null);
 
 #pragma warning disable CS8604 // Possible null reference argument.
-            ExecuteSymetricWatch(Monitoring, Monitoring.MonitorProcess, Monitoring.CancelEvent);
+            ExecuteSymmetricWatch(Monitoring, Monitoring.MonitorProcess, Monitoring.CancelEvent);
 #pragma warning restore CS8604 // Possible null reference argument.
         }
 
@@ -235,8 +238,8 @@
         /// </summary>
         /// <param name="monitoring">The monitoring information.</param>
         /// <param name="monitorProcess">The monitoring process.</param>
-        /// <param name="cancelEvent">The cancelation event.</param>
-        private static void ExecuteSymetricWatch(Monitoring monitoring, Process monitorProcess, EventWaitHandle cancelEvent)
+        /// <param name="cancelEvent">The cancellation event.</param>
+        private static void ExecuteSymmetricWatch(Monitoring monitoring, Process monitorProcess, EventWaitHandle cancelEvent)
         {
             TimeSpan AliveTimeout = monitoring.AliveTimeout;
             Debug.Assert(AliveTimeout > TimeSpan.Zero);
@@ -244,39 +247,25 @@
             bool IsAlive = true;
             AliveWatch.Start();
 
-            while (true)
+            while (IsAlive && AliveWatch.Elapsed < AliveTimeout && !cancelEvent.WaitOne(SharedDefinitions.CheckInterval))
             {
-                bool Exit = false;
-
-                if (!IsAlive)
-                    Exit = true;
-
-                if (AliveWatch.Elapsed >= AliveTimeout)
-                    Exit = true;
-
-                if (Exit)
-                    break;
-
-                if (cancelEvent.WaitOne(SharedDefinitions.CheckInterval))
-                    break;
-
                 IsAlive = !monitorProcess.HasExited;
 
                 if (!IsAlive)
                 {
-                    using (Process p = monitorProcess)
+                    using (monitorProcess)
                     {
                     }
 
                     // Wait the same delay as if restarting the original process.
                     Thread.Sleep(monitoring.Delay);
 
-                    ZombifyMeInternal(monitoring, out Errors Error);
+                    ZombifyMeInternal(monitoring, out _);
                 }
             }
         }
 
-        private static Stopwatch AliveWatch = new Stopwatch();
+        private static readonly Stopwatch AliveWatch = new Stopwatch();
         #endregion
 
         #region Implementation
@@ -290,19 +279,15 @@
         {
             fileName = string.Empty;
 
-            string ResourceName = string.Empty;
-
             Assembly CurrentAssembly = Assembly.GetExecutingAssembly();
             string[] ResourceNames = CurrentAssembly.GetManifestResourceNames();
             Debug.Assert(ResourceNames.Length == 1);
 
-            ResourceName = ResourceNames[0];
+            string ResourceName = ResourceNames[0];
             Debug.Assert(ResourceName.Length > 0);
 
-            using (Stream ResourceStream = CurrentAssembly.GetManifestResourceStream(ResourceName))
-            {
-                return LoadMonitor(monitorFolder, ResourceStream, out fileName);
-            }
+            using Stream ResourceStream = CurrentAssembly.GetManifestResourceStream(ResourceName);
+            return LoadMonitor(monitorFolder, ResourceStream, out fileName);
         }
 
         /// <summary>
@@ -316,12 +301,7 @@
         {
             try
             {
-                string DestinationDirectory;
-
-                if (monitorFolder.Length == 0)
-                    DestinationDirectory = Path.GetTempPath();
-                else
-                    DestinationDirectory = monitorFolder;
+                string DestinationDirectory = (monitorFolder.Length == 0) ? Path.GetTempPath() : monitorFolder;
 
                 Guid NewGuid = Guid.NewGuid();
                 string TemporaryFileName = $"0{NewGuid}.exe"; // 0 in front to locate it easily at the top of processes when sorted by names.

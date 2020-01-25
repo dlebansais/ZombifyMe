@@ -16,7 +16,6 @@
             DelayUntilReboot = 4,
             WriteThrough = 8,
             CreateHardlink = 16,
-            FailIfNotTrackable = 32,
         }
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]

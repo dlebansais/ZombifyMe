@@ -32,12 +32,12 @@
         /// <summary>
         /// Flags for the restarted process.
         /// </summary>
-        public Flags Flags { get; set; }
+        public Flags Flags { get; set; } = Flags.None;
 
         /// <summary>
         /// True if the main process should also watch on the monitoring process to restart it.
         /// </summary>
-        public bool IsSymetric { get; set; }
+        public bool IsSymmetric { get; set; }
 
         /// <summary>
         /// Gets and sets the timeout for the main thread to notify it's alive.
