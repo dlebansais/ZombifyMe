@@ -14,7 +14,7 @@ if not exist ".\packages\%OPENCOVER%\tools\OpenCover.Console.exe" goto error1
 if not exist ".\packages\%CODECOV%\tools\codecov.exe" goto error2
 if not exist ".\ZombifyMe\bin\x64\Debug\net48\ZombifyMe.dll" goto error3
 
-if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml del .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml
+if exist coverage.xml del coverage.xml
 
 call .\coverage\app-monitor.bat ZombifyMe Debug 0
 call .\coverage\wait.bat 20
@@ -87,7 +87,7 @@ call .\coverage\wait.bat 60
 
 if exist set_process_id.bat del set_process_id.bat
 call ..\Certification\set_tokens.bat
-if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml .\packages\%CODECOV%\tools\codecov -f ".\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml" -t "%ZOMBIFYME_CODECOV_TOKEN%"
+if exist coverage.xml .\packages\%CODECOV%\tools\codecov -f "coverage.xml" -t "%ZOMBIFYME_CODECOV_TOKEN%"
 goto end
 
 :error1

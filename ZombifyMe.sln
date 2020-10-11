@@ -6,19 +6,26 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZombifyMe", "ZombifyMe\ZombifyMe.csproj", "{8AA2D8ED-7177-46B0-BFAC-C59C92883C44}"
 	ProjectSection(ProjectDependencies) = postProject
 		{ADB92F48-D2F5-440E-AC3E-113C777E825E} = {ADB92F48-D2F5-440E-AC3E-113C777E825E}
+		{5D0517AE-EE05-46DC-B1BE-9ED72BF4A073} = {5D0517AE-EE05-46DC-B1BE-9ED72BF4A073}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test-ZombifyMe", "Test-ZombifyMe\Test-ZombifyMe.csproj", "{BF8580F6-6858-4EA4-924E-F00AB7C8E212}"
 	ProjectSection(ProjectDependencies) = postProject
 		{ADB92F48-D2F5-440E-AC3E-113C777E825E} = {ADB92F48-D2F5-440E-AC3E-113C777E825E}
+		{5D0517AE-EE05-46DC-B1BE-9ED72BF4A073} = {5D0517AE-EE05-46DC-B1BE-9ED72BF4A073}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZombifyMeMonitor", "ZombifyMeMonitor\ZombifyMeMonitor.csproj", "{ADB92F48-D2F5-440E-AC3E-113C777E825E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5D0517AE-EE05-46DC-B1BE-9ED72BF4A073} = {5D0517AE-EE05-46DC-B1BE-9ED72BF4A073}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D18B43F9-E631-4A04-B6A4-C2591B6F5F66}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PreBuild", "PreBuild\PreBuild.csproj", "{5D0517AE-EE05-46DC-B1BE-9ED72BF4A073}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +45,10 @@ Global
 		{ADB92F48-D2F5-440E-AC3E-113C777E825E}.Debug|x64.Build.0 = Debug|x64
 		{ADB92F48-D2F5-440E-AC3E-113C777E825E}.Release|x64.ActiveCfg = Release|x64
 		{ADB92F48-D2F5-440E-AC3E-113C777E825E}.Release|x64.Build.0 = Release|x64
+		{5D0517AE-EE05-46DC-B1BE-9ED72BF4A073}.Debug|x64.ActiveCfg = Debug|x64
+		{5D0517AE-EE05-46DC-B1BE-9ED72BF4A073}.Debug|x64.Build.0 = Debug|x64
+		{5D0517AE-EE05-46DC-B1BE-9ED72BF4A073}.Release|x64.ActiveCfg = Release|x64
+		{5D0517AE-EE05-46DC-B1BE-9ED72BF4A073}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

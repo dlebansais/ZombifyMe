@@ -16,7 +16,7 @@
         /// Entry points of the program.
         /// </summary>
         /// <param name="args">Arguments from the ZombifyMe library.</param>
-        /// <returns>0 if the monitored process exited normally, 1 if it was restarted, a negative value in case of error.</returns>
+        /// <returns>0 if the monitored process exited normally, 1 if it was restarted, or a negative value in case of error.</returns>
         public static int Main(string[] args)
         {
             // Check arguments; They should be valid since only ZombifyMe is starting us.
