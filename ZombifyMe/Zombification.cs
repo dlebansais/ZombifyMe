@@ -66,7 +66,7 @@
         /// <summary>
         /// True if the main process should also watch on the monitoring process to restart it.
         /// </summary>
-        public bool IsSymmetric { get; set; } = false;
+        public bool IsSymmetric { get; set; }
 
         /// <summary>
         /// Gets and sets the timeout for the main thread to notify it's alive.

@@ -1,16 +1,16 @@
-﻿using System;
-using System.Diagnostics;
-using System.Threading;
-using System.Windows.Forms;
-using ZombifyMe;
-
-namespace TestZombifyMe
+﻿namespace TestZombifyMe
 {
+    using System;
+    using System.Diagnostics;
+    using System.Threading;
+    using System.Windows.Forms;
+    using ZombifyMe;
+
     public static class Program
     {
-        public static bool IsRestart 
-        { 
-            get 
+        public static bool IsRestart
+        {
+            get
             {
                 try
                 {
@@ -99,7 +99,7 @@ namespace TestZombifyMe
         private static DialogResult ShowDialog(bool isManual, bool isCoverageCancel, string text, MessageBoxButtons buttons)
         {
             if (isManual)
-                return MessageBox.Show(text, "", buttons);
+                return MessageBox.Show(text, string.Empty, buttons);
             else if (isCoverageCancel)
                 return DialogResult.Cancel;
             else
