@@ -10,9 +10,8 @@
     /// <summary>
     /// The main class for this program.
     /// </summary>
-    public static class Program
+    public static class Monitor
     {
-        #region Implementation
         /// <summary>
         /// Entry points of the program.
         /// </summary>
@@ -158,6 +157,5 @@
 
             return Result;
         }
-        #endregion
     }
 }
