@@ -1,5 +1,5 @@
 # Zombify Me
-[![Build Status](https://travis-ci.com/dlebansais/ZombifyMe.svg?branch=master)](https://travis-ci.com/dlebansais/ZombifyMe)
+[![Build status](https://ci.appveyor.com/api/projects/status/qc1u46yluy767d95?svg=true)](https://ci.appveyor.com/project/dlebansais/zombifyme)
 [![CodeFactor](https://www.codefactor.io/repository/github/dlebansais/zombifyme/badge)](https://www.codefactor.io/repository/github/dlebansais/zombifyme)
 [![codecov](https://codecov.io/gh/dlebansais/ZombifyMe/branch/master/graph/badge.svg)](https://codecov.io/gh/dlebansais/ZombifyMe)
 
