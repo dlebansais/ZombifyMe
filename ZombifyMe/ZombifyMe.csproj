@@ -14,7 +14,7 @@
     <Copyright>Copyright © 2019 David Le Bansais</Copyright>
     <AssemblyVersion>1.0.0.173</AssemblyVersion>
     <FileVersion>1.0.0.110</FileVersion>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/dlebansais/ZombifyMe</RepositoryUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
     <RootNamespace>ZombifyMe</RootNamespace>

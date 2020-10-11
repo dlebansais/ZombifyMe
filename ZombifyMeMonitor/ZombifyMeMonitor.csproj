@@ -61,7 +61,6 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if exist &quot;$(SolutionDir)updatecommit.bat&quot; call &quot;$(SolutionDir)updatecommit.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(TargetPath)&quot;" />
     <Exec Command="if exist &quot;$(TargetPath)&quot; copy /Y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)ZombifyMe\Resources\$(TargetName).$(Configuration).exe&quot;" />
   </Target>
 
