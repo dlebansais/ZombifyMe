@@ -44,7 +44,7 @@ deploy:
     description: '%APPVEYOR_REPO_COMMIT_MESSAGE%'
     auth_token:
       secure: dUpQSnUT5/m88z1BqHNnRjaxxZzz09CmyqFJr/cAyWjqKeLgnKunlIZlEKAXlNIm
-    artifact: ZombifyMe-Release
+    artifact: ZombifyMe
     draft: true
     prerelease: false
     on:

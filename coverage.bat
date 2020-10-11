@@ -88,6 +88,7 @@ call .\coverage\wait.bat 60
 if exist set_process_id.bat del set_process_id.bat
 call ..\Certification\set_tokens.bat
 if exist coverage.xml .\packages\%CODECOV%\tools\codecov -f "coverage.xml" -t "%ZOMBIFYME_CODECOV_TOKEN%"
+if exist coverage.xml del coverage.xml
 goto end
 
 :error1
