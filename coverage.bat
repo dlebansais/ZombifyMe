@@ -87,8 +87,8 @@ call .\coverage\wait.bat 60
 
 if exist set_process_id.bat del set_process_id.bat
 call ..\Certification\set_tokens.bat
-goto end
 if exist .\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml .\packages\%CODECOV%\tools\codecov -f ".\Test-ZombifyMe\obj\x64\Debug\Coverage-Debug_coverage.xml" -t "%ZOMBIFYME_CODECOV_TOKEN%"
+goto end
 
 :error1
 echo ERROR: OpenCover.Console not found. Restore it with Nuget.
