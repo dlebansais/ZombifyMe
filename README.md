@@ -58,7 +58,3 @@ Zombification.Flags = Flags.ForwardArguments;
 Zombification.IsSymmetric = false;
 Zombification.AliveTimeout = TimeSpan.Zero;
 ```
-
-# Certification
-
-This library is digitally signed with a [CAcert](https://www.cacert.org/) certificate.
