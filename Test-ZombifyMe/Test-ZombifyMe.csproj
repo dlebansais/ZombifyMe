@@ -7,16 +7,16 @@
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <Platforms>x64</Platforms>
-    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Authors>David Le Bansais</Authors>
     <Company />
     <Product />
     <Description>Test</Description>
     <Copyright>Copyright © 2019 David Le Bansais</Copyright>
-    <AssemblyVersion>1.0.1.174</AssemblyVersion>
-    <FileVersion>1.0.1.47</FileVersion>
+    <AssemblyVersion>1.0.2.174</AssemblyVersion>
+    <FileVersion>1.0.2.47</FileVersion>
     <RepositoryUrl>https://github.com/dlebansais/ZombifyMe</RepositoryUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
     <RootNamespace>ZombifyMe</RootNamespace>
@@ -49,13 +49,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(SolutionDir)'!='*Undefined*'">
     <Exec Command="if exist &quot;$(SolutionDir)updatecommit.bat&quot; call &quot;$(SolutionDir)updatecommit.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(TargetPath)&quot;" />
-  </Target>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <Exec Command="if exist &quot;$(SolutionDir)updatecommit.bat&quot; call &quot;$(SolutionDir)updatecommit.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(TargetPath)&quot;" />
-    <Exec Command="if exist &quot;$(SolutionDir)signfile.bat&quot; call &quot;$(SolutionDir)signfile.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(Configuration)-$(Platform)&quot; &quot;$(TargetPath)&quot;" />
+    <Exec Command="if exist &quot;$(SolutionDir)signfile.bat&quot; call &quot;$(SolutionDir)signfile.bat&quot; &quot;$(SolutionDir)&quot; &quot;$(Configuration)-$(Platform)&quot; &quot;$(TargetPath)&quot;" Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   </Target>
 
 </Project>

@@ -7,20 +7,19 @@
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <Platforms>x64</Platforms>
-    <RuntimeIdentifier>win7-x64</RuntimeIdentifier>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Version>1.0.1</Version>
+    <Version>1.0.2</Version>
     <Authors>David Le Bansais</Authors>
     <Company />
     <Product>ZombifyMe</Product>
     <Description>A monitor that restarts a program if it crashes unexpectedly</Description>
     <Copyright>Copyright © 2019 David Le Bansais</Copyright>
-    <AssemblyVersion>1.0.1.174</AssemblyVersion>
-    <FileVersion>1.0.1.81</FileVersion>
+    <AssemblyVersion>1.0.2.174</AssemblyVersion>
+    <FileVersion>1.0.2.81</FileVersion>
     <RepositoryUrl>https://github.com/dlebansais/ZombifyMe</RepositoryUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
     <RootNamespace>ZombifyMe</RootNamespace>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 
   <ItemGroup>
@@ -48,7 +47,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="TaskbarTools" Version="1.1.0" />
+    <PackageReference Include="TaskbarTools-Debug" Version="1.2.1" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <PackageReference Include="TaskbarTools" Version="1.2.1" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,6 +59,19 @@
   <ItemGroup>
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
+
+  <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">
+    <ItemGroup>
+      <ReferenceCopyLocalPaths 
+        Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).pdb')" 
+        Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != ''
+                    and Exists('%(RootDir)%(Directory)%(Filename).pdb')" />
+      <ReferenceCopyLocalPaths 
+        Include="@(ReferenceCopyLocalPaths->'%(RootDir)%(Directory)%(Filename).xml')" 
+        Condition="'%(ReferenceCopyLocalPaths.NuGetPackageId)' != ''
+                    and Exists('%(RootDir)%(Directory)%(Filename).xml')" />
+    </ItemGroup>
+  </Target>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="if exist &quot;$(TargetPath)&quot; copy /Y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)ZombifyMe\Resources\$(TargetName).$(Configuration).exe&quot;" />
