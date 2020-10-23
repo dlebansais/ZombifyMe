@@ -10,52 +10,52 @@
     internal class Monitoring
     {
         /// <summary>
-        /// Gets the name of the client.
+        /// Gets or sets the name of the client.
         /// </summary>
         public string ClientName { get; set; } = string.Empty;
 
         /// <summary>
-        /// Gets and sets the delay between when a process has crashed and when it's restarted.
+        /// Gets or sets the delay between when a process has crashed and when it's restarted.
         /// </summary>
         public TimeSpan Delay { get; set; }
 
         /// <summary>
-        /// Message to display when watching begins.
+        /// Gets or sets the message to display when watching begins.
         /// </summary>
         public string WatchingMessage { get; set; } = string.Empty;
 
         /// <summary>
-        /// Message to display after a process is restarted.
+        /// Gets or sets the message to display after a process is restarted.
         /// </summary>
         public string RestartMessage { get; set; } = string.Empty;
 
         /// <summary>
-        /// Flags for the restarted process.
+        /// Gets or sets the flags for the restarted process.
         /// </summary>
         public Flags Flags { get; set; } = Flags.None;
 
         /// <summary>
-        /// True if the main process should also watch on the monitoring process to restart it.
+        /// Gets or sets a value indicating whether the main process should also watch on the monitoring process to restart it.
         /// </summary>
         public bool IsSymmetric { get; set; }
 
         /// <summary>
-        /// Gets and sets the timeout for the main thread to notify it's alive.
+        /// Gets or sets the timeout for the main thread to notify it's alive.
         /// </summary>
         public TimeSpan AliveTimeout { get; set; }
 
         /// <summary>
-        /// Folder where to put the monitoring processes. If empty, the temporary folder is used.
+        /// Gets or sets the folder where to put the monitoring processes. If empty, the temporary folder is used.
         /// </summary>
         public string MonitorFolder { get; set; } = string.Empty;
 
         /// <summary>
-        /// The monitoring process.
+        /// Gets or sets the monitoring process.
         /// </summary>
         public Process? MonitorProcess { get; set; }
 
         /// <summary>
-        /// The event used to cancel monitoring.
+        /// Gets or sets the event used to cancel monitoring.
         /// </summary>
         public EventWaitHandle? CancelEvent { get; set; }
     }

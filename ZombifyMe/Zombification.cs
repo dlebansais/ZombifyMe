@@ -26,7 +26,7 @@
 
         #region Properties
         /// <summary>
-        /// True if the current process is a restarted one.
+        /// Gets a value indicating whether the current process is a restarted one.
         /// </summary>
         /// <exception cref="SecurityException">The caller does not have read permission for process environment variables.</exception>
         public static bool IsRestart
@@ -44,42 +44,42 @@
         public string ClientName { get; }
 
         /// <summary>
-        /// Gets and sets the delay between when a process has crashed and when it's restarted.
+        /// Gets or sets the delay between when a process has crashed and when it's restarted.
         /// </summary>
         public TimeSpan Delay { get; set; } = TimeSpan.Zero;
 
         /// <summary>
-        /// Message to display when watching begins.
+        /// Gets or sets the message to display when watching begins.
         /// </summary>
         public string WatchingMessage { get; set; } = string.Empty;
 
         /// <summary>
-        /// Message to display after a process is restarted.
+        /// Gets or sets the message to display after a process is restarted.
         /// </summary>
         public string RestartMessage { get; set; } = "ZombifyMe Alert:\nA protected process has been restarted";
 
         /// <summary>
-        /// Flags for the restarted process.
+        /// Gets or sets the flags for the restarted process.
         /// </summary>
         public Flags Flags { get; set; } = Flags.ForwardArguments;
 
         /// <summary>
-        /// True if the main process should also watch on the monitoring process to restart it.
+        /// Gets or sets a value indicating whether the main process should also watch on the monitoring process to restart it.
         /// </summary>
         public bool IsSymmetric { get; set; }
 
         /// <summary>
-        /// Gets and sets the timeout for the main thread to notify it's alive.
+        /// Gets or sets the timeout for the main thread to notify it's alive.
         /// </summary>
         public TimeSpan AliveTimeout { get; set; } = TimeSpan.Zero;
 
         /// <summary>
-        /// Folder where to put the monitoring processes. If empty, the temporary folder is used.
+        /// Gets or sets the folder where to put the monitoring processes. If empty, the temporary folder is used.
         /// </summary>
         public string MonitorFolder { get; set; } = string.Empty;
 
         /// <summary>
-        /// The last error encountered by <see cref="ZombifyMe"/>.
+        /// Gets the the last error encountered by <see cref="ZombifyMe"/>.
         /// </summary>
         public Errors LastError { get; private set; } = Errors.Success;
         #endregion
