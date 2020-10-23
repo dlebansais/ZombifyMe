@@ -73,8 +73,11 @@
     </ItemGroup>
   </Target>
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(SolutionDir)'!='*Undefined*'">
+    <Exec Command="if not exist &quot;$(SolutionDir)ZombifyMe\Resources&quot; mkdir &quot;$(SolutionDir)ZombifyMe\Resources&quot;" />
     <Exec Command="if exist &quot;$(TargetPath)&quot; copy /Y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)ZombifyMe\Resources\$(TargetName).$(Configuration).exe&quot;" />
+    <Exec Command="if not exist &quot;$(TargetPath)&quot; &quot;$(SolutionDir)ZombifyMe\Resources\$(TargetName).Release.exe&quot; copy /Y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)ZombifyMe\Resources\$(TargetName).Release.exe&quot;" />
+    <Exec Command="if not exist &quot;$(TargetPath)&quot; &quot;$(SolutionDir)ZombifyMe\Resources\$(TargetName).Debug.exe&quot; copy /Y &quot;$(TargetPath)&quot; &quot;$(SolutionDir)ZombifyMe\Resources\$(TargetName).Debug.exe&quot;" />
   </Target>
 
 </Project>
