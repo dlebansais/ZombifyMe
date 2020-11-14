@@ -6,7 +6,7 @@ setlocal
 if not exist coverage.xml goto nomerge
 set MERGE=-mergeoutput
 :nomerge
-start "ZombifyMe" /B ".\Test-%1\bin\x64\%2\net48\Test-%1.exe" %~4 > set_process_id.bat
+start "ZombifyMe" /B ".\Test\Test-%1\bin\x64\%2\net48\Test-%1.exe" %~4 > set_process_id.bat
 PING -n 2 -w 1000 127.1 > NUL
 call set_process_id.bat
 echo Id: %TEST_ZOMBIFY_PROCESS_ID%
