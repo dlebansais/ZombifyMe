@@ -111,9 +111,13 @@
                 return false;
             }
 
+#if NET48
             int ProcessId = Process.GetCurrentProcess().Id;
+#else
+            int ProcessId = Environment.ProcessId;
+#endif
 
-            Assembly EntryAssembly = Assembly.GetEntryAssembly();
+            Contracts.Contract.RequireNotNull(Assembly.GetEntryAssembly(), out Assembly EntryAssembly);
             string ClientExePath = EntryAssembly.Location;
 
             string ArgsText = string.Empty;
@@ -201,9 +205,9 @@
         {
             AliveWatch.Restart();
         }
-        #endregion
+#endregion
 
-        #region Symmetric Watch Thread
+#region Symmetric Watch Thread
         /// <summary>
         /// Starts a thread to ensure the monitoring process is restarted if it crashed.
         /// </summary>
@@ -218,13 +222,13 @@
         /// Ensures the monitoring process is restarted if it crashed.
         /// </summary>
         /// <param name="parameter">The monitoring process.</param>
-        private static void ExecuteSymmetricWatch(object parameter)
+        private static void ExecuteSymmetricWatch(object? parameter)
         {
             // Wait a bit to ensure the new process is started.
             // A proper synchronization would be preferable, but at this point I'm too lazy.
             Thread.Sleep(1000);
 
-            Monitoring Monitoring = (Monitoring)parameter;
+            Monitoring Monitoring = (Monitoring)parameter !;
             Debug.Assert(Monitoring.MonitorProcess != null);
             Debug.Assert(Monitoring.CancelEvent != null);
 
@@ -272,9 +276,9 @@
         }
 
         private static readonly Stopwatch AliveWatch = new Stopwatch();
-        #endregion
+#endregion
 
-        #region Implementation
+#region Implementation
         /// <summary>
         /// Loads the first executable in resources and write it down to a temporary file.
         /// </summary>
@@ -292,7 +296,7 @@
             string ResourceName = ResourceNames[0];
             Debug.Assert(ResourceName.Length > 0);
 
-            using Stream ResourceStream = CurrentAssembly.GetManifestResourceStream(ResourceName);
+            using Stream ResourceStream = CurrentAssembly.GetManifestResourceStream(ResourceName) !;
             return LoadMonitor(monitorFolder, ResourceStream, out fileName);
         }
 
@@ -332,6 +336,6 @@
         }
 
         private EventWaitHandle? CancelEvent;
-        #endregion
+#endregion
     }
 }

@@ -128,7 +128,7 @@
             {
                 FileName = processExePath,
                 Arguments = processArguments,
-                WorkingDirectory = Path.GetDirectoryName(processExePath),
+                WorkingDirectory = Path.GetDirectoryName(processExePath) !,
             };
 
             if (flags.HasFlag(Flags.NoWindow))

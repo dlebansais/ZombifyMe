@@ -1,22 +1,22 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFrameworks>net48;net5.0-windows</TargetFrameworks>
     <UseWPF>true</UseWPF>
     <LangVersion>8.0</LangVersion>
     <Nullable>enable</Nullable>
     <Platforms>x64</Platforms>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Version>1.0.2</Version>
+    <Version>1.0.3</Version>
     <Authors>David Le Bansais</Authors>
     <Company />
     <Product>ZombifyMe</Product>
     <Description>A monitor that restarts a program if it crashes unexpectedly</Description>
     <Copyright>Copyright © 2019 David Le Bansais</Copyright>
-    <AssemblyVersion>1.0.2.174</AssemblyVersion>
-    <FileVersion>1.0.2.81</FileVersion>
+    <AssemblyVersion>1.0.3.178</AssemblyVersion>
+    <FileVersion>1.0.3.82</FileVersion>
     <RepositoryUrl>https://github.com/dlebansais/ZombifyMe</RepositoryUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
     <RootNamespace>ZombifyMe</RootNamespace>
@@ -47,17 +47,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="TaskbarTools-Debug" Version="1.2.1" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
-    <PackageReference Include="TaskbarTools" Version="1.2.1" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
+    <PackageReference Include="TaskbarTools-Debug" Version="1.3.2" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" />
+    <PackageReference Include="TaskbarTools" Version="1.3.2" Condition="'$(Configuration)|$(Platform)'!='Debug|x64'" />
   </ItemGroup>
 
   <ItemGroup>
     <Compile Include="../Common/Flags.cs" />
     <Compile Include="../Common/SharedDefinitions.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 
   <Target Name="_ResolveCopyLocalNuGetPackagePdbsAndXml" Condition="$(CopyLocalLockFileAssemblies) == true" AfterTargets="ResolveReferences">
