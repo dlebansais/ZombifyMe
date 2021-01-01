@@ -296,7 +296,7 @@
             string ResourceName = ResourceNames[0];
             Debug.Assert(ResourceName.Length > 0);
 
-            using Stream ResourceStream = CurrentAssembly.GetManifestResourceStream(ResourceName) !;
+            using Stream ResourceStream = CurrentAssembly.GetManifestResourceStream(ResourceName)!;
             return LoadMonitor(monitorFolder, ResourceStream, out fileName);
         }
 
