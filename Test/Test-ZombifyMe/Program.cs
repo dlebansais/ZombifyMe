@@ -47,28 +47,7 @@
 
             if (IsMonitor)
             {
-                bool IsMonitorCancel = args.Length > 1 && args[1] == "cancel";
-                bool IsMonitorWait = args.Length > 1 && args[1] == "cancel";
-
-#if NET48
-                int ProcessId = Process.GetCurrentProcess().Id;
-#else
-                int ProcessId = Environment.ProcessId;
-#endif
-
-                Console.WriteLine($"set TEST_ZOMBIFY_PROCESS_ID={ProcessId}\r\n");
-                using EventWaitHandle CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, SharedDefinitions.GetCancelEventName("Coverage"));
-
-                Thread.Sleep(TimeSpan.FromSeconds(5));
-
-                if (IsMonitorCancel)
-                {
-                    CancelEvent.Set();
-                    Thread.Sleep(TimeSpan.FromSeconds(5));
-                }
-
-                if (IsMonitorWait)
-                    Thread.Sleep(TimeSpan.FromSeconds(5));
+                Monitor(args);
                 return;
             }
 
@@ -106,6 +85,32 @@
 
                 ShowDialog(IsManual, IsCoverageCancel, "Cancel() done", MessageBoxButtons.OK);
             }
+        }
+
+        private static void Monitor(string[] args)
+        {
+            bool IsMonitorCancel = args.Length > 1 && args[1] == "cancel";
+            bool IsMonitorWait = args.Length > 1 && args[1] == "cancel";
+
+#if NET48
+            int ProcessId = Process.GetCurrentProcess().Id;
+#else
+            int ProcessId = Environment.ProcessId;
+#endif
+
+            Console.WriteLine($"set TEST_ZOMBIFY_PROCESS_ID={ProcessId}\r\n");
+            using EventWaitHandle CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, SharedDefinitions.GetCancelEventName("Coverage"));
+
+            Thread.Sleep(TimeSpan.FromSeconds(5));
+
+            if (IsMonitorCancel)
+            {
+                CancelEvent.Set();
+                Thread.Sleep(TimeSpan.FromSeconds(5));
+            }
+
+            if (IsMonitorWait)
+                Thread.Sleep(TimeSpan.FromSeconds(5));
         }
 
         private static DialogResult ShowDialog(bool isManual, bool isCoverageCancel, string text, MessageBoxButtons buttons)
