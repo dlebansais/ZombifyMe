@@ -58,12 +58,15 @@
 
                 Console.WriteLine($"set TEST_ZOMBIFY_PROCESS_ID={ProcessId}\r\n");
                 using EventWaitHandle CancelEvent = new EventWaitHandle(false, EventResetMode.ManualReset, SharedDefinitions.GetCancelEventName("Coverage"));
+
                 Thread.Sleep(TimeSpan.FromSeconds(5));
+
                 if (IsMonitorCancel)
                 {
                     CancelEvent.Set();
                     Thread.Sleep(TimeSpan.FromSeconds(5));
                 }
+
                 if (IsMonitorWait)
                     Thread.Sleep(TimeSpan.FromSeconds(5));
                 return;
