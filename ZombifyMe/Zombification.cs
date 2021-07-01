@@ -207,7 +207,7 @@
         }
 #endregion
 
-#region Symmetric Watch Thread
+        #region Symmetric Watch Thread
         /// <summary>
         /// Starts a thread to ensure the monitoring process is restarted if it crashed.
         /// </summary>
@@ -276,9 +276,9 @@
         }
 
         private static readonly Stopwatch AliveWatch = new Stopwatch();
-#endregion
+        #endregion
 
-#region Implementation
+        #region Implementation
         /// <summary>
         /// Loads the first executable in resources and write it down to a temporary file.
         /// </summary>
@@ -336,6 +336,6 @@
         }
 
         private EventWaitHandle? CancelEvent;
-#endregion
+        #endregion
     }
 }
