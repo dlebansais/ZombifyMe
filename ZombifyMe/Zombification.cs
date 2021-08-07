@@ -145,7 +145,6 @@
 
             // Start the monitoring process.
             // Don't dispose of it, it's passed to another thread.
-#pragma warning disable CA2000 // Dispose objects before losing scope
             Process MonitorProcess = new Process
             {
                 StartInfo =
@@ -156,7 +155,6 @@
                     CreateNoWindow = true,
                 },
             };
-#pragma warning restore CA2000 // Dispose objects before losing scope
 
             bool Result;
 

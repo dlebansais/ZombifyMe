@@ -6,14 +6,14 @@
     <Nullable>enable</Nullable>
     <Platforms>x64</Platforms>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <Authors>David Le Bansais</Authors>
     <Company />
     <Product />
     <Description>A library that can restart the program its linked with if it crashes unexpectedly</Description>
     <Copyright>Copyright © 2019 David Le Bansais</Copyright>
-    <AssemblyVersion>1.0.3.183</AssemblyVersion>
-    <FileVersion>1.0.3.114</FileVersion>
+    <AssemblyVersion>1.0.4.187</AssemblyVersion>
+    <FileVersion>1.0.4.115</FileVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/dlebansais/ZombifyMe</RepositoryUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
