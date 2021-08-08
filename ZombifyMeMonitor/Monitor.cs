@@ -19,10 +19,10 @@
         /// <returns>0 if the monitored process exited normally, 1 if it was restarted, or a negative value in case of error.</returns>
         public static int Main(string[] args)
         {
+            Thread.Sleep(TimeSpan.FromSeconds(5));
+
             // Check arguments; They should be valid since only ZombifyMe is starting us.
-#pragma warning disable CA1062 // Validate arguments of public methods
-            if (args.Length < 8)
-#pragma warning restore CA1062 // Validate arguments of public methods
+            if (args == null || args.Length < 8)
                 return -1;
 
             // Read the ID of the process to monitor.
