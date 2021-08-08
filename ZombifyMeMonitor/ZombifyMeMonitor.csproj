@@ -9,14 +9,14 @@
     <Platforms>x64</Platforms>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <Version>1.0.4</Version>
+    <Version>1.0.5</Version>
     <Authors>David Le Bansais</Authors>
     <Company />
     <Product>ZombifyMe</Product>
     <Description>A monitor that restarts a program if it crashes unexpectedly</Description>
     <Copyright>Copyright © 2019 David Le Bansais</Copyright>
-    <AssemblyVersion>1.0.4.187</AssemblyVersion>
-    <FileVersion>1.0.4.86</FileVersion>
+    <AssemblyVersion>1.0.5.187</AssemblyVersion>
+    <FileVersion>1.0.5.86</FileVersion>
     <RepositoryUrl>https://github.com/dlebansais/ZombifyMe</RepositoryUrl>
     <NeutralLanguage>en-US</NeutralLanguage>
     <RootNamespace>ZombifyMe</RootNamespace>
