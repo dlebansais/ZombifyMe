@@ -111,7 +111,7 @@
                 return false;
             }
 
-#if NET48
+#if NET481
             int ProcessId = Process.GetCurrentProcess().Id;
 #else
             int ProcessId = Environment.ProcessId;

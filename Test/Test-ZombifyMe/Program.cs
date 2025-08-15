@@ -92,7 +92,7 @@
             bool IsMonitorCancel = args.Length > 1 && args[1] == "cancel";
             bool IsMonitorWait = args.Length > 1 && args[1] == "cancel";
 
-#if NET48
+#if NET481
             int ProcessId = Process.GetCurrentProcess().Id;
 #else
             int ProcessId = Environment.ProcessId;
